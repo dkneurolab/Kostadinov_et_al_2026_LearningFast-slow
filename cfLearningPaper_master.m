@@ -2,15 +2,15 @@
 set(0,'DefaultFigureWindowStyle','docked');
 
 % Paths to data
-comp = 'pc'; %'mac' or 'pc'
-switch comp
-    case 'mac'
-        dataFold     = '/Users/dimitar/Desktop/CF_learning_paper'; % Where the raw data lives
-        paperFold      = '/Users/dimitar/Dropbox/DK papers/2022_Kostadinov_FastSlowLearning'; % Where the figures and data are saved
-    case 'pc'
-        dataFold     = 'E:\Analysis_current'; % Where the raw data lives
-        paperFold      = 'C:\Users\Dimitar\Dropbox\DK papers\2022_Kostadinov_FastSlowLearning'; % Where the figures and data are saved
+if ismac
+    dataFold     = '/Volumes/prj_dn_dklab/Dimitar/Analysis_HausserLab'; % Where the raw data lives (on server)
+    paperFold      = '/Users/dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
+elseif ispc
+    dataFold     = 'E:\Analysis_current'; % Where the raw data lives
+    paperFold      = 'C:\Users\Dimitar\Dropbox\DK papers\2022_Kostadinov_FastSlowLearning'; % Where the figures and data are saved
 end
+% Add path to figure-specific scripts
+addpath(genpath(fullfile(paperFold,'Scripts')))
 
 % Load in data summaries and set parameters
 imDatasets = load(fullfile(dataFold,'imDatasets.mat'));
@@ -162,6 +162,7 @@ fig3_sigSummary(sessionsv4_n,dataFold2,paperFold,glmParams,savebool)
 plotbool = true;
 fig3_behavCorrelates(matchFOVs,glmParams,dataFold,paperFold,plotbool,savebool)
 
+fig3_modDirection(matchData,glmParams,dataFold,paperFold,savebool)
 
 %% -------------------FIGURE 4: slow learning ------------------
 % Figure 4 stuff starts here:
@@ -222,11 +223,21 @@ end
 
 
 % Fit v4n GLM on data from v1 (on correct trials)
-fig4_matchGLMbars(sessionsv1_im,'v1',sessionsv4_n,'v4n','corrects',glmParams,dataFold,paperFold,savebool); % 'corrects' or 'all' trials to fit
+[pSig_v1_v4n_lobv, pSig_v1_v4n_sim2] = fig4_matchGLMbars(sessionsv1_im,'v1',sessionsv4_n,'v4n','corrects',glmParams,dataFold,paperFold,savebool); % 'corrects' or 'all' trials to fit
 % Fit v41 GLM on data from v1 (on correct trials)
-fig4_matchGLMbars(sessionsv1_im,'v1',sessionsv4_1,'v41','corrects',glmParams,dataFold,paperFold,savebool); % 'corrects' or 'all' trials to fit
+[pSig_v1_v41_lobv, pSig_v1_v41_sim2] = fig4_matchGLMbars(sessionsv1_im,'v1',sessionsv4_1,'v41','corrects',glmParams,dataFold,paperFold,savebool); % 'corrects' or 'all' trials to fit
 % Fit v4n GLM on data from v41 (on correct trials)
-fig4_matchGLMbars(sessionsv4_1,'v41',sessionsv4_n,'v4n','corrects',glmParams,dataFold,paperFold,savebool); % 'corrects' or 'all' trials to fit
+[pSig_v41_v4n_lobv, pSig_v41_v4n_sim2] = fig4_matchGLMbars(sessionsv4_1,'v41',sessionsv4_n,'v4n','corrects',glmParams,dataFold,paperFold,savebool); % 'corrects' or 'all' trials to fit
+
+lobv_stats = cat(2,pSig_v1_v4n_lobv, pSig_v1_v41_lobv, pSig_v41_v4n_lobv);
+sim2_stats = cat(2,pSig_v1_v4n_sim2, pSig_v1_v41_sim2, pSig_v41_v4n_sim2);
+
+[p,tbl,stats] = friedman(lobv_stats);
+c = multcompare(stats,'CType', 'bonferroni');
+
+[p,tbl,stats] = friedman(sim2_stats);
+c = multcompare(stats,'CType', 'bonferroni');
+
 
 % Plot task-aligned activity for matched ROIs for example fig
 sortFOV = 2; % Sort trial by v4_n session (which is second)
@@ -281,7 +292,7 @@ fig3_GLMtaskMod_v4n(sessionsv5_im, pcaVar, dataFold, paperFold, savebool);
 fig5_adaptAnalysis(matchData, glmParams, dataFold, paperFold, savebool)
 
 % Calculate distance-dependence
-fig4_kernelRvsDist_v45(sessionsv4_n,paperFold,savebool)
+fig5_adaptRatiovsDist(sessionsv4_n,paperFold,savebool)
 
 %% -------------------FIGURE 6: Comparing fast and slow learning-------------------
 % Figure 6 stuff starts here:
