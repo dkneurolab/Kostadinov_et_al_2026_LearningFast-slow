@@ -1,0 +1,188 @@
+function GLMoutput_v41 = fig3_matchGLMallTrials(v4nSesh,v41Sesh,glmParams,dataFold)
+
+v41Date = v41Sesh.date(end-4:end);
+v4nDate = v4nSesh.date(end-4:end);
+strDash = strfind(v41Date,'-'); v41Date(strDash) = [];
+strDash = strfind(v4nDate,'-'); v4nDate(strDash) = [];
+regPath = sprintf('REG_%s_%s',v4nDate,v41Date);
+
+imFold = fullfile(dataFold,'02_Imaging',v4nSesh.name,regPath);
+matchFile = dir(fullfile(imFold,'*analysis.mat'));
+matchFile = load(fullfile(imFold,matchFile.name));
+iMatch0 = matchFile.regi.rois.idcs;
+[~,iSort] = sort(iMatch0(:,1),'ascend');
+iMatch = iMatch0(iSort,:);
+
+glmFold1 = fullfile(dataFold,'01_Behav+imaging',sprintf('Version_%i',v41Sesh.version),v41Sesh.name,...
+    sprintf('%s_%s',v41Sesh.date,v41Sesh.fov),'GLM','glmRfiles');
+glmFold4 = fullfile(dataFold,'01_Behav+imaging',sprintf('Version_%i',v4nSesh.version),v4nSesh.name,...
+    sprintf('%s_%s',v4nSesh.date,v4nSesh.fov),'GLM','glmRfiles');
+glmFold4_model = fullfile(glmFold4,sprintf('GLMfull_%s_%s_alpha%i',glmParams.dataType,glmParams.distr,glmParams.alpha*100));
+
+%%
+glmV41 = load(fullfile(glmFold1,'GLMfull_small.mat')); glmV41 = glmV41.GLMfull_small;
+glmV4n = load(fullfile(glmFold4,'GLMfull_small.mat')); glmV4n = glmV4n.GLMfull_small;
+GLMoutput_v4n = load(fullfile(glmFold4_model,'GLMsig+VisMovRewLick.mat')); GLMoutput_v4n = GLMoutput_v4n.GLMoutput;
+GLMoutput_v4n = GLMoutput_v4n(iMatch(:,1));
+
+DMv1 = glmV41.DM;
+yDatav1 = glmV41.Ytrials(:,iMatch(:,2));
+
+DMv1_project = (DMv1-mean(DMv1))*glmV4n.DMpca.coef;
+
+nShuf = numel(GLMoutput_v4n(1).GLMobj_shuf);
+
+%%
+GLMoutput_v41 = struct;
+for iRoi = 1:size(iMatch,1)
+    GLMoutput_v41(iRoi).iPC = iMatch(iRoi,2);
+    GLMoutput_v41(iRoi).iPC_v4 = iMatch(iRoi,1);
+    GLMoutput_v41(iRoi).GLMobj_v4 = GLMoutput_v4n(iRoi).GLMobj;
+    GLMoutput_v41(iRoi).GLMrankPCA = GLMoutput_v4n(iRoi).GLMrankPCA;
+    GLMoutput_v41(iRoi).yData = yDatav1(:,iRoi);
+    GLMoutput_v41(iRoi).sigV4 = false;
+    DMv1_local = DMv1_project(:,1:GLMoutput_v41(iRoi).GLMrankPCA);
+    
+    if ~isempty(GLMoutput_v41(iRoi).GLMobj_v4)
+        GLMoutput_v41(iRoi).sigV4 = GLMoutput_v4n(iRoi).sigBool;
+        
+        % Reduced model
+        CVpred = cvglmnetPredict(GLMoutput_v41(iRoi).GLMobj_v4, DMv1_local, 'lambda_min');
+        if strcmpi(glmParams.distr,'gaussian')
+            GLMoutput_v41(iRoi).yHat = CVpred;
+            GLMoutput_v41(iRoi).devExp = gaussianDevExp(GLMoutput_v41(iRoi).yData,GLMoutput_v41(iRoi).yHat);
+        elseif strcmpi(glmParams.distr,'poisson')
+            GLMoutput_v41(iRoi).yHat = exp(CVpred);
+            GLMoutput_v41(iRoi).devExp = poissonDevExp(GLMoutput_v41(iRoi).yData,GLMoutput_v41(iRoi).yHat);
+        end
+        
+        % Full model
+        CVpred_full = cvglmnetPredict(GLMoutput_v4n(iRoi).GLMobj_full, DMv1, 'lambda_min');
+        if strcmpi(glmParams.distr,'gaussian')
+            GLMoutput_v41(iRoi).yHat_full = CVpred_full;
+            GLMoutput_v41(iRoi).devExp_full = gaussianDevExp(GLMoutput_v41(iRoi).yData,GLMoutput_v41(iRoi).yHat_full);
+        elseif strcmpi(glmParams.distr,'poisson')
+            GLMoutput_v41(iRoi).yHat_full = exp(CVpred_full);
+            GLMoutput_v41(iRoi).devExp_full = poissonDevExp(GLMoutput_v41(iRoi).yData,GLMoutput_v41(iRoi).yHat_full);
+        end
+        
+        % Shuf projection - significant fit?
+        if ~isempty(GLMoutput_v4n(iRoi).GLMobj_shuf)
+            devExp_shuf = zeros(nShuf,1);
+            yHat_shuf = zeros(numel(GLMoutput_v41(iRoi).yData),nShuf);
+            for jShuf = 1:nShuf
+                CVpred_shuf = cvglmnetPredict(GLMoutput_v4n(iRoi).GLMobj_shuf{jShuf,1}, DMv1_local, 'lambda_min');
+                if strcmpi(glmParams.distr,'gaussian')
+                    yHat_shuf(:,jShuf) = CVpred_shuf;
+                    devExp_shuf(jShuf) = gaussianDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                elseif strcmpi(glmParams.distr,'poisson')
+                    yHat_shuf(:,jShuf) = exp(CVpred_shuf);
+                    % Calculate real deviance explained
+                    devExp_shuf(jShuf) = poissonDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                end
+            end
+            GLMoutput_v41(iRoi).devExp_shuf = devExp_shuf;
+            GLMoutput_v41(iRoi).yHat_shuf = single(mean(yHat_shuf,2));
+            GLMoutput_v41(iRoi).sigBool = GLMoutput_v41(iRoi).devExp > (mean(devExp_shuf)+2*std(devExp_shuf)) & GLMoutput_v41(iRoi).devExp > 0;
+            
+            % Vis projection - significant fit?
+            if GLMoutput_v4n(iRoi).sigBool_shufVis_proj
+                devExp_shuf = zeros(nShuf,1);
+                yHat_shuf = zeros(numel(GLMoutput_v41(iRoi).yData),nShuf);
+                for jShuf = 1:nShuf
+                    CVpred_shuf = cvglmnetPredict(GLMoutput_v4n(iRoi).GLMobj_shufVis_proj{jShuf,1}, DMv1_local, 'lambda_min');
+                    if strcmpi(glmParams.distr,'gaussian')
+                        yHat_shuf(:,jShuf) = CVpred_shuf;
+                        devExp_shuf(jShuf) = gaussianDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    elseif strcmpi(glmParams.distr,'poisson')
+                        yHat_shuf(:,jShuf) = exp(CVpred_shuf);
+                        % Calculate real deviance explained
+                        devExp_shuf(jShuf) = poissonDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    end
+                end
+                GLMoutput_v41(iRoi).devExp_shufVis = devExp_shuf;
+                GLMoutput_v41(iRoi).yHat_shufVis = single(mean(yHat_shuf,2));
+                GLMoutput_v41(iRoi).sigBool_shufVis = GLMoutput_v41(iRoi).devExp > (mean(devExp_shuf)+2*std(devExp_shuf)) & GLMoutput_v41(iRoi).devExp > 0;
+            else
+                GLMoutput_v41(iRoi).devExp_shufVis = [];
+                GLMoutput_v41(iRoi).yHat_shufVis = [];
+                GLMoutput_v41(iRoi).sigBool_shufVis = nan;
+            end
+            
+            % Mov projection - significant fit?
+            if GLMoutput_v4n(iRoi).sigBool_shufMov_proj
+                devExp_shuf = zeros(nShuf,1);
+                yHat_shuf = zeros(numel(GLMoutput_v41(iRoi).yData),nShuf);
+                for jShuf = 1:nShuf
+                    CVpred_shuf = cvglmnetPredict(GLMoutput_v4n(iRoi).GLMobj_shufMov_proj{jShuf,1}, DMv1_local, 'lambda_min');
+                    if strcmpi(glmParams.distr,'gaussian')
+                        yHat_shuf(:,jShuf) = CVpred_shuf;
+                        devExp_shuf(jShuf) = gaussianDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    elseif strcmpi(glmParams.distr,'poisson')
+                        yHat_shuf(:,jShuf) = exp(CVpred_shuf);
+                        % Calculate real deviance explained
+                        devExp_shuf(jShuf) = poissonDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    end
+                end
+                GLMoutput_v41(iRoi).devExp_shuMov = devExp_shuf;
+                GLMoutput_v41(iRoi).yHat_shufMov = single(mean(yHat_shuf,2));
+                GLMoutput_v41(iRoi).sigBool_shufMov = GLMoutput_v41(iRoi).devExp > (mean(devExp_shuf)+2*std(devExp_shuf)) & GLMoutput_v41(iRoi).devExp > 0;
+            else
+                GLMoutput_v41(iRoi).devExp_shuMov = [];
+                GLMoutput_v41(iRoi).yHat_shufMov = [];
+                GLMoutput_v41(iRoi).sigBool_shufMov = nan;
+            end
+            
+            % Rew projection - significant fit?
+            if GLMoutput_v4n(iRoi).sigBool_shufRew_proj
+                devExp_shuf = zeros(nShuf,1);
+                yHat_shuf = zeros(numel(GLMoutput_v41(iRoi).yData),nShuf);
+                for jShuf = 1:nShuf
+                    CVpred_shuf = cvglmnetPredict(GLMoutput_v4n(iRoi).GLMobj_shufRew_proj{jShuf,1}, DMv1_local, 'lambda_min');
+                    if strcmpi(glmParams.distr,'gaussian')
+                        yHat_shuf(:,jShuf) = CVpred_shuf;
+                        devExp_shuf(jShuf) = gaussianDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    elseif strcmpi(glmParams.distr,'poisson')
+                        yHat_shuf(:,jShuf) = exp(CVpred_shuf);
+                        % Calculate real deviance explained
+                        devExp_shuf(jShuf) = poissonDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    end
+                end
+                GLMoutput_v41(iRoi).devExp_shufRew = devExp_shuf;
+                GLMoutput_v41(iRoi).yHat_shufRew = single(mean(yHat_shuf,2));
+                GLMoutput_v41(iRoi).sigBool_shufRew = GLMoutput_v41(iRoi).devExp > (mean(devExp_shuf)+2*std(devExp_shuf)) & GLMoutput_v41(iRoi).devExp > 0;
+            else
+                GLMoutput_v41(iRoi).devExp_shufRew = [];
+                GLMoutput_v41(iRoi).yHat_shufRew = [];
+                GLMoutput_v41(iRoi).sigBool_shufRew = nan;
+            end
+            
+            % Lick projection - significant fit?
+            if GLMoutput_v4n(iRoi).sigBool_shufLick_proj
+                devExp_shuf = zeros(nShuf,1);
+                yHat_shuf = zeros(numel(GLMoutput_v41(iRoi).yData),nShuf);
+                for jShuf = 1:nShuf
+                    CVpred_shuf = cvglmnetPredict(GLMoutput_v4n(iRoi).GLMobj_shufLick_proj{jShuf,1}, DMv1_local, 'lambda_min');
+                    if strcmpi(glmParams.distr,'gaussian')
+                        yHat_shuf(:,jShuf) = CVpred_shuf;
+                        devExp_shuf(jShuf) = gaussianDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    elseif strcmpi(glmParams.distr,'poisson')
+                        yHat_shuf(:,jShuf) = exp(CVpred_shuf);
+                        % Calculate real deviance explained
+                        devExp_shuf(jShuf) = poissonDevExp(GLMoutput_v41(iRoi).yData,yHat_shuf(:,jShuf));
+                    end
+                end
+                GLMoutput_v41(iRoi).devExp_shufLick = devExp_shuf;
+                GLMoutput_v41(iRoi).yHat_shufLick = single(mean(yHat_shuf,2));
+                GLMoutput_v41(iRoi).sigBool_shufLick = GLMoutput_v41(iRoi).devExp > (mean(devExp_shuf)+2*std(devExp_shuf)) & GLMoutput_v41(iRoi).devExp > 0;
+            else
+                GLMoutput_v41(iRoi).devExp_shufLick = [];
+                GLMoutput_v41(iRoi).yHat_shufLick = [];
+                GLMoutput_v41(iRoi).sigBool_shufLick = nan;
+            end
+        end
+    end
+end
+
+
+end

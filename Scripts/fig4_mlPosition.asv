@@ -1,0 +1,55 @@
+function seshOut = fig4_mlPosition(seshIn, matchData)
+
+seshOut = seshIn;
+
+for iSesh = 1:numel(seshIn)
+    seshLocal = seshIn(iSesh);
+    for jMatch = 1:numel(matchData)
+        if seshLocal.name == matchData(jMatch).name && seshLocal.fov == matchData(jMatch).fov
+            if seshLocal.date == matchData(jMatch).date1
+                iDate = 1;
+            else
+                iDate = 2;
+            end
+            
+            % Get median slope of FOV            
+            medSlope = median(cat(1,matchData(jData).imData(iDate).final.slope));
+            medTheta = atan(1/medSlope);
+            if medTheta < 0; medTheta = medTheta+2*pi(); end
+            % Get original center coordinates
+            ctrs = cat(1,matchData(jData).imData(iDate).final.ctrs);
+            ctrs(:,2) = 512-ctrs(:,2);
+            [xctrs, yctrs] = rotatePoint(ctrs(:,1),ctrs(:,2), double(medTheta));
+            seshOut(iSesh).xCtrsPx = xctrs-min(xctrs);
+
+        end
+    end
+end
+
+
+% Find matching session:
+
+
+
+
+%% Calculate median FOV angle, rotate points and populate seshOut with new data
+
+% 
+% 
+% iData = 20;
+% 
+% medSlope = median(cat(1,matchData(iData).imData(2).final.slope));
+% medTheta = atan(1/medSlope);
+% if medTheta < 0; medTheta = medTheta+2*pi(); end
+% % medTheta = pi()/2-medTheta;
+% 
+% figure; hold on;
+% 
+% for iroi = 1:numel(matchData(iData).imData(2).final)
+%     [xpts, ypts] = rotatePoint(double(matchData(iData).imData(2).final(iroi).xpix), double(512-matchData(iData).imData(2).final(iroi).ypix), double(medTheta));
+%     scatter(xpts, ypts);
+%     [xctrs, yctrs] = rotatePoint(double(matchData(iData).imData(2).final(iroi).ctrs(1)), double(512-matchData(iData).imData(2).final(iroi).ctrs(2)), double(medTheta));
+%     scatter(xctrs, yctrs,'k','filled');
+% end
+% 
+% axis square;
