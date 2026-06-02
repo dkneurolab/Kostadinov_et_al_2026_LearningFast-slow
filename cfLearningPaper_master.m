@@ -6,8 +6,8 @@ if ismac
     dataFold     = '/Volumes/prj_dn_dklab/Dimitar/Analysis_HausserLab'; % Where the raw data lives (on server)
     paperFold      = '/Users/dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
 elseif ispc
-    dataFold     = 'E:\Analysis_current'; % Where the raw data lives
-    paperFold      = 'C:\Users\Dimitar\Dropbox\DK papers\2022_Kostadinov_FastSlowLearning'; % Where the figures and data are saved
+    dataFold     = '//rds.er.kcl.ac.uk/prj_dn_dklab/Dimitar/Analysis_HausserLab'; % Where the raw data lives
+    paperFold      = 'C:/Users/Dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
 end
 % Add path to figure-specific scripts
 addpath(genpath(fullfile(paperFold,'Scripts')))
@@ -88,9 +88,7 @@ fig1_exampleBehav(sessions_im(13:16),dataFold,paperFold,savebool)
 
 % Manual data entry: days between v1v3end and v41v4n:
 v1v3endDays = [25 21 31 31 16 11 20 20];
-v41v4nDays = [6 12 8 9 7 13 22 15];
-
-    
+v41v4nDays = [6 12 8 9 7 13 22 15];   
 % DK070 138 103 105 169 171 194 199
 
 %% -------------------FIGURE 2: Chronic imaging-------------------
@@ -100,16 +98,11 @@ matchROIs = fig2_matchedROIs_vs_days(dataFold,paperFold,matchColors,savebool);
 
 % Calculate baseline FRs for matched ROIs and plot their onset, movement, and reward signals
 [matchData, matchFOVs] = fig2_roiMatch(imDatasets,matchROIs,dataFold,paperFold,matchColors, savebool);
-[matchSpont] = fig2_roiMatchSpont(matchData,dataFold,paperFold,matchColors, savebool);
+matchSpont = fig2_roiMatchSpont(matchData,dataFold,paperFold,matchColors, savebool);
 
 % Combine v144 sessions into mega-response-matrix
 matchPCs_v144 = fig2_match_v144(matchData,matchSpont,matchFOVs,dataFold,paperFold,matchColors,savebool);
-% % Combine v145 sessions into mega-response-matrix
-% matchPCs_v145 = fig1_match_v145(matchData,matchSpont,matchFOVs,dataFold,paperFold,matchColors,savebool);
-% 
 matchStats144 = fig2_matchStats(matchData, matchPCs_v144, dataFold, paperFold,'v144',savebool);
-% matchStats145 = fig1_matchStats(matchData, matchPCs_v145, dataFold, paperFold,'v145',savebool);
-
 
 %% -------------------FIGURE 3: Expert performance-------------------
 % Figure 3 stuff starts here:
@@ -154,19 +147,13 @@ fig3_GLMtrace_heat(sessionsv4_n,dataFold2,paperFold,glmParams,tracebool,savebool
 % Make summary glm bar graphs and save out significant IDs
 fig3_sigSummary(sessionsv4_n,dataFold2,paperFold,glmParams,savebool)
 
-% % Response similarity as a fxn of distance - single params and single FOVs
-% % and combined within FOV and recording
-% fig2_GLMdistDep(sessionsv4_n,dataFold2,paperFold,glmParams,savebool)
-
 % Analyze movement parameters for each FOV and reward history
 plotbool = true;
 fig3_behavCorrelates(matchFOVs,glmParams,dataFold,paperFold,plotbool,savebool)
-
 fig3_modDirection(matchData,glmParams,dataFold,paperFold,savebool)
 
 %% -------------------FIGURE 4: slow learning ------------------
 % Figure 4 stuff starts here:
-% Set common model framework (should be same as in fig 2)
 
 % Combine v144 sessions into mega-response-matrix
 matchPCs_v144 = fig2_match_v144(matchData,matchSpont,matchFOVs,dataFold,paperFold,matchColors,savebool);
@@ -238,7 +225,6 @@ c = multcompare(stats,'CType', 'bonferroni');
 [p,tbl,stats] = friedman(sim2_stats);
 c = multcompare(stats,'CType', 'bonferroni');
 
-
 % Plot task-aligned activity for matched ROIs for example fig
 sortFOV = 2; % Sort trial by v4_n session (which is second)
 fig4_matchFOVs(sessionsv1_im,'v1',sessionsv4_n,'v4n',sortFOV,dataFold,paperFold,savebool)
@@ -250,7 +236,6 @@ fig4_matchFOVs(sessionsv4_1,'v41',sessionsv4_n,'v4n',sortFOV,dataFold,paperFold,
 trainSesh = {'v41','v4n'}; % Use both v41 and v4n as prediction sessions
 testSesh = {'v1','v41'}; % Use v1 and v41 as testing
 fig4_matchPercSig(trainSesh,testSesh,'corrects',paperFold,savebool);
-
 
 %% Figure 4 - fit movement and reward kernels using v4n data
 
@@ -264,29 +249,19 @@ sessionsv5_im = fig4_mlPosition(sessionsv5_im, matchData);
 sessionsv4_1 = fig4_mlPosition(sessionsv4_1, matchData);
 sessionsv1_im = fig4_mlPosition(sessionsv1_im, matchData);
 
-% 
+% Compute kernel corr vs distance
 fig4_kernelRvsDist(sessionsv4_n,paperFold,savebool)
 fig4_kernelRvsDist_v4only(sessionsv4_n,paperFold,savebool)
 
 
 %% -------------------FIGURE 5: Fast learning-------------------
 % Figure 5 stuff starts here:
-% Set common model framework (should be same as in fig 3)
-
-% % GLM parameters: this will determine which v4_n GLM to fish out as well as
-% % what parameters to use to fit models in this figure
-% glmParams.dataType      = 'spk'; % 'fluo' or 'spk' for zF or spike events
-% glmParams.distr         = 'gaussian'; % 'gaussian' (for fluo data), 'poisson' (for spk counts), or 'binomial' (for binarized spk trains)
-% glmParams.link          = []; % Use default link function for given distribution
-% glmParams.alpha         = .5; % Others use 0.5 for gaussian GLMs and 0.8-0.9 for poisson or binomial GLMs
-% glmParams.nLambda       = 100; % Good number, don't change from 100
 
 % Run GLM pre-processing on trained v5 sessions first
 fig3_GLMbatch(sessionsv5_im,dataFold,paperFold,comp,savebool);
 
 % Make GLM data structures for R - start with v4_5
 fig3_GLMtaskMod_v4n(sessionsv5_im, pcaVar, dataFold, paperFold, savebool);
-
 
 %% Make example figures showing washin and washout using mov and reward cells from v4n and pool into summary figure
 fig5_adaptAnalysis(matchData, glmParams, dataFold, paperFold, savebool)

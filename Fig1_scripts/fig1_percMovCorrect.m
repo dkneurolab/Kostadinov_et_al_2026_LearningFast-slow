@@ -49,7 +49,7 @@ if ~exist(fullfile(figFold,'percMovCorrect_v1.mat'),'file')
             if any(abs(v1) > movThreshold) % movement threshold is 1.5 cm/s mm of wheel translation
                 sessionsv1(i).movBool(j) = true;
             end
-            if sessionsv1(i).iTrialsReal(j) & trials(j).correct
+            if sessionsv1(i).iTrialsReal(j) && trials(j).correct
                 sessionsv1(i).corrBool(j) = true;
             end
         end
@@ -103,7 +103,7 @@ else
 end
 
 %% Version 4 section - same as above but for v4 (learning / expert task version)
-if ~exist(fullfile(figFold,'percMovCorrect_v4.mat'),'file')
+if exist(fullfile(figFold,'percMovCorrect_v4.mat'),'file')
     % If this has not already been done, iterate over session and extract
     % percent correct and fraction of trials with movement
     for i = 1:numel(sessionsv4)
@@ -348,6 +348,7 @@ if ~exist(fullfile(figFold,'percMovCorrect_v5.mat'),'file')
 else
     % If this has already been done, just load the file to save time
     sessionsv5 = load(fullfile(figFold,'percMovCorrect_v5.mat'),'sessionsv5');
+    %     sessionsv5 = load(fullfile(figFold,['percMovCorrect_v5_',num2str(adaptTrialGrp),'trials.mat']));
     sessionsv5 = sessionsv5.sessionsv5;
 
     for i = 1:numel(sessionsv5)
@@ -356,13 +357,17 @@ else
         sessionsv5(i).nTrialsBase = sum(sessionsv5(i).iTrialsReal(1:sets.changetrial));
         sessionsv5(i).nTrialsEarly = sum(sessionsv5(i).iTrialsReal(sets.changetrial+1:sets.changetrial+adaptTrialGrp));
         sessionsv5(i).nTrialsLate = sum(sessionsv5(i).iTrialsReal(sets.changetrial+121-adaptTrialGrp:sets.changetrial+120));
+        %         sessionsv5(i).nTrialsBase = sum(cat(1,trials(1:sets.changetrial).realtrial));
+        %         sessionsv5(i).nTrialsEarly = sum(cat(1,trials(sets.changetrial+1:sets.changetrial+adaptTrialGrp).realtrial));
+        %         sessionsv5(i).nTrialsLate = sum(cat(1,trials(sets.changetrial+121-adaptTrialGrp:sets.changetrial+120).realtrial));
 
         if ~sets.changeback
             sessionsv5(i).nTrialsWash = 0;
         else
             nWashTrials = sessionsv5(i).nTrials-sets.changebacktrial;
             if nWashTrials > adaptTrialGrp; nWashTrials = adaptTrialGrp; end
-            sessionsv5(i).nTrialsWash = sum(sessionsv5(i).iTrialsReal(sets.changebacktrial+1:sets.changebacktrial+nWashTrials));            
+            sessionsv5(i).nTrialsWash = sum(sessionsv5(i).iTrialsReal(sets.changebacktrial+1:sets.changebacktrial+nWashTrials));
+            %             sessionsv5(i).nTrialsWash = sum(cat(1,trials(sets.changebacktrial+1:sets.changebacktrial+nWashTrials).realtrial));
         end
 
         if sessionsv5(i).nTrialsReal > 0
