@@ -1,4 +1,4 @@
-%% Master file for figures of Kostadinov and Hausser, 2022
+%% Master file for figures of Kostadinov and Hausser, 2026
 set(0,'DefaultFigureWindowStyle','docked');
 
 % Paths to data
