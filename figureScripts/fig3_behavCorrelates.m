@@ -157,18 +157,18 @@ if savebool
     figname = 'v4_movSummary_field';
     savefig(figsField(1), fullfile(figFold,[figname,'.fig']));
     saveas(figsField(1),fullfile(figFold,[figname,'.png']));
-    print(figsField(1),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+    print(figsField(1),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = 'v4_rewSummary_field';
     savefig(figsField(2), fullfile(figFold,[figname,'.fig']));
     saveas(figsField(2),fullfile(figFold,[figname,'.png']));
-    print(figsField(2),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');    
+    print(figsField(2),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');    
     save(fullfile(figFold,'v4_parametrize.mat'),'seshSummary');
     
     figname = 'v4_sigSummary_field';
     savefig(figsField(3), fullfile(figFold,[figname,'.fig']));
     saveas(figsField(3),fullfile(figFold,[figname,'.png']));
-    print(figsField(3),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');    
+    print(figsField(3),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');    
     
     save(fullfile(figFold,'v4_parametrize.mat'),'seshSummary', 'statsField');
 end

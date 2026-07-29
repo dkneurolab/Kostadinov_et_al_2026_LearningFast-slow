@@ -169,7 +169,7 @@ if savebool
     savename = sprintf('jointProbs');
     savefig(fJoint,fullfile(figFold,[savename,'.fig']));
     saveas(fJoint,fullfile(figFold,[savename,'.png']));
-    print(fJoint,fullfile(figFold,[savename,'.eps']), '-depsc', '-painters');
+    print(fJoint,fullfile(figFold,[savename,'.eps']), '-depsc', '-vector');
 end
 
 
@@ -230,7 +230,7 @@ if savebool
     savename = sprintf('devExpScatters');
     savefig(fDevExp,fullfile(figFold,[savename,'.fig']));
     saveas(fDevExp,fullfile(figFold,[savename,'.png']));
-    print(fDevExp,fullfile(figFold,[savename,'.eps']), '-depsc', '-painters');
+    print(fDevExp,fullfile(figFold,[savename,'.eps']), '-depsc', '-vector');
 end
 
 %%  Percent with sig fits
@@ -254,7 +254,7 @@ if savebool
     savename = sprintf('LobV_summaryBar');
     savefig(flobV,fullfile(figFold,[savename,'.fig']));
     saveas(flobV,fullfile(figFold,[savename,'.png']));
-    print(flobV,fullfile(figFold,[savename,'.eps']), '-depsc', '-painters');
+    print(flobV,fullfile(figFold,[savename,'.eps']), '-depsc', '-vector');
 end
 
 fsim2 = figure;
@@ -276,7 +276,7 @@ if savebool
     savename = sprintf('sim2_summaryBar');
     savefig(fsim2,fullfile(figFold,[savename,'.fig']));
     saveas(fsim2,fullfile(figFold,[savename,'.png']));
-    print(fsim2,fullfile(figFold,[savename,'.eps']), '-depsc', '-painters');
+    print(fsim2,fullfile(figFold,[savename,'.eps']), '-depsc', '-vector');
 end
 
 %% Combined figure with single plots
@@ -354,7 +354,7 @@ if savebool
     savename = sprintf('LobVvsSim2_summaryBar');
     savefig(fboth,fullfile(figFold,[savename,'.fig']));
     saveas(fboth,fullfile(figFold,[savename,'.png']));
-    print(fboth,fullfile(figFold,[savename,'.eps']), '-depsc', '-painters');
+    print(fboth,fullfile(figFold,[savename,'.eps']), '-depsc', '-vector');
 end
 
 end

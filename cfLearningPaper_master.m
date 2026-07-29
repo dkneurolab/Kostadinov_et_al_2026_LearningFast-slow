@@ -10,7 +10,8 @@ elseif ispc
     paperFold      = 'C:/Users/Dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
 end
 % Add path to figure-specific scripts
-addpath(genpath(fullfile(paperFold,'Scripts')))
+addpath(genpath(fullfile(paperFold,'figureScripts')))
+addpath(genpath(fullfile(paperFold,'sharedScripts')))
 
 % Load in data summaries and set parameters
 imDatasets = load(fullfile(dataFold,'imDatasets.mat'));
@@ -45,7 +46,7 @@ end
 sessionsv1_im = sessions_im(cat(1,sessions_im.version) == 1);
 sessionsv4_im = sessions_im(cat(1,sessions_im.version) == 4);
 sessionsv5_im = sessions_im(cat(1,sessions_im.version) == 5);
-
+sessionsv5_behav = sessions_Behav(cat(1,sessions_Behav.version) == 5);
 
 % Local settings for sessions:
 sessionsv4_n    = sessionsv4_im([2,3,5,6,8,10,12,14,16,18,20,22]);
@@ -53,8 +54,8 @@ sessionsv4_1    = sessionsv4_im([1,4,7,9,11,13,15,17,19,21]);
 pcaVar          = 80; % Percent of PCA variance to be used in for design matrix reduction
 
 % Set session parameters:
-savebool        = false; % Save data, etc.
-closebool       = true; % Close figures after running scripts?
+savebool        = true; % Save data, etc.
+closebool       = false; % Close figures after running scripts?
 
 % GLM params:
 % GLM parameters:
@@ -67,9 +68,8 @@ glmParams.nLambda       = 100; % Good number, don't change from 100
 %% -------------------FIGURE 1: Setting up behaviour-------------------
 %% Figure 1 - alignment and controls
 
-% Old style figure showing endpoints, etc.
-adaptTrialGrp = 30;
-fig1_percMovCorrect(sessions_Behav,dataFold,paperFold,adaptTrialGrp,matchColors,closebool,savebool);
+% Make example behav traces using DK169 naive, learning, expert, and adaptation sessions
+fig1_exampleBehav(sessions_im(13:16),dataFold,paperFold,savebool)
 
 % Extract behavioural stability for v1 data
 seshV1_movCorr = fig1_v1stability(behavData_v1,dataFold,paperFold,savebool);
@@ -83,17 +83,13 @@ fig1_v1to4learning(seshV1_movCorr, seshV4_movCorr,nLearningSesh+2,dataFold,paper
 adaptTrialGrp = 30;
 fig1_adaptBehav(behavData_v5,adaptTrialGrp,dataFold,paperFold,savebool)
 
-% Make example behav traces using DK169 naive, learning, expert, and adaptation sessions
-fig1_exampleBehav(sessions_im(13:16),dataFold,paperFold,savebool)
-
 % Manual data entry: days between v1v3end and v41v4n:
 v1v3endDays = [25 21 31 31 16 11 20 20];
 v41v4nDays = [6 12 8 9 7 13 22 15];   
 % DK070 138 103 105 169 171 194 199
 
 %% -------------------FIGURE 2: Chronic imaging-------------------
-
-% Calculate how many ROIs can be matched across days
+% Calculate how many ROIs can be matched across days (runs in 60s)
 matchROIs = fig2_matchedROIs_vs_days(dataFold,paperFold,matchColors,savebool);
 
 % Calculate baseline FRs for matched ROIs and plot their onset, movement, and reward signals
@@ -216,20 +212,17 @@ end
 % Fit v4n GLM on data from v41 (on correct trials)
 [pSig_v41_v4n_lobv, pSig_v41_v4n_sim2] = fig4_matchGLMbars(sessionsv4_1,'v41',sessionsv4_n,'v4n','corrects',glmParams,dataFold,paperFold,savebool); % 'corrects' or 'all' trials to fit
 
-lobv_stats = cat(2,pSig_v1_v4n_lobv, pSig_v1_v41_lobv, pSig_v41_v4n_lobv);
-sim2_stats = cat(2,pSig_v1_v4n_sim2, pSig_v1_v41_sim2, pSig_v41_v4n_sim2);
-
-[p,tbl,stats] = friedman(lobv_stats);
-c = multcompare(stats,'CType', 'bonferroni');
-
-[p,tbl,stats] = friedman(sim2_stats);
-c = multcompare(stats,'CType', 'bonferroni');
+% Concatenate and run stats
+crossDayStats_lobv = cat(2,pSig_v1_v4n_lobv, pSig_v1_v41_lobv, pSig_v41_v4n_lobv); clear pSig_v1_v4n_lobv pSig_v1_v41_lobv pSig_v41_v4n_lobv;
+crossDayStats_sim2 = cat(2,pSig_v1_v4n_sim2, pSig_v1_v41_sim2, pSig_v41_v4n_sim2); clear pSig_v1_v4n_sim2 pSig_v1_v41_sim2 pSig_v41_v4n_sim2;
+crossDayStatSummary = fig4_crossDayStats(crossDayStats_lobv, crossDayStats_sim2, paperFold, savebool);
 
 % Plot task-aligned activity for matched ROIs for example fig
 sortFOV = 2; % Sort trial by v4_n session (which is second)
-fig4_matchFOVs(sessionsv1_im,'v1',sessionsv4_n,'v4n',sortFOV,dataFold,paperFold,savebool)
-fig4_matchFOVs(sessionsv1_im,'v1',sessionsv4_1,'v41',sortFOV,dataFold,paperFold,savebool)
-fig4_matchFOVs(sessionsv4_1,'v41',sessionsv4_n,'v4n',sortFOV,dataFold,paperFold,savebool)
+if ~exist('matchData','var'); matchData = []; end
+fig4_matchFOVs(matchData,sessionsv1_im,'v1',sessionsv4_n,'v4n',sortFOV,dataFold,paperFold,savebool)
+fig4_matchFOVs(matchData,sessionsv1_im,'v1',sessionsv4_1,'v41',sortFOV,dataFold,paperFold,savebool)
+fig4_matchFOVs(matchData,sessionsv4_1,'v41',sessionsv4_n,'v4n',sortFOV,dataFold,paperFold,savebool)
 
 %% Figure 4 - make percent significant heatmaps
 
@@ -264,20 +257,17 @@ fig3_GLMbatch(sessionsv5_im,dataFold,paperFold,comp,savebool);
 fig3_GLMtaskMod_v4n(sessionsv5_im, pcaVar, dataFold, paperFold, savebool);
 
 %% Make example figures showing washin and washout using mov and reward cells from v4n and pool into summary figure
-fig5_adaptAnalysis(matchData, glmParams, dataFold, paperFold, savebool)
+fig5_adaptAnalysis(matchData, sessionsv5_behav, glmParams, dataFold, paperFold, savebool)
 
 % Calculate distance-dependence
-fig5_adaptRatiovsDist(sessionsv4_n,paperFold,savebool)
+fig5_adaptRatiovsDist(sessionsv4_n,paperFold,'meandiff', savebool)
+fig5_adaptRatiovsDist(sessionsv4_n,paperFold,'samedir', savebool)
 
 %% -------------------FIGURE 6: Comparing fast and slow learning-------------------
-% Figure 6 stuff starts here:
 
-% Compare v1-v4 to changes to acute v4 changes (mov correlation and reward
-% history)
-fig6_part1
-
-% Comparing reliabliity:
-fig6_part2(matchData, glmParams, dataFold, paperFold, savebool)
+% % Combine v145 sessions into mega-response-matrix
+matchPCs_v145 = fig1_match_v145(matchData,matchSpont,matchFOVs,dataFold,paperFold,matchColors,savebool);
+matchStats145 = fig2_matchStats(matchData, matchPCs_v145, dataFold, paperFold,'v145',savebool);
 
 % Comparing v1-4 chagnes to v5 adaptation:
 fig6_analysis_sfn(matchData, paperFold, savebool)

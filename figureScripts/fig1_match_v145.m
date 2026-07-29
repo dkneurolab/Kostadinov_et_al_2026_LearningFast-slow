@@ -1,4 +1,8 @@
 function matchPCs_v145 = fig1_match_v145(matchData,matchSpont,matchFOVs0,dataFold,paperFold,matchColors,savebool)
+%% Set sampling stuff - assume second dataset of first recording is v4
+fs.imfs = matchSpont(1).sets2.imfs;
+fs.behavfs = matchSpont(1).sets2.fs/50;
+fs.rewDelay = matchSpont(1).sets2.rewdelay;
 
 %% Get sessions that have v145
 a = 0;
@@ -69,8 +73,8 @@ clear matchData
 
 %% Process data by location
 
-[lobvfigs,lobvPCs] = fig1_match_v145plot(matchFOVs(cat(1,matchFOVs.ilobv)),'Lobule V');
-[sim2figs,sim2PCs] = fig1_match_v145plot(matchFOVs(cat(1,matchFOVs.isim2)),'Simplex');
+[lobvfigs,lobvPCs] = fig1_match_v145plot(matchFOVs(cat(1,matchFOVs.ilobv)),'Lobule V', fs);
+[sim2figs,sim2PCs] = fig1_match_v145plot(matchFOVs(cat(1,matchFOVs.isim2)),'Simplex', fs);
 
 lobvPCs = fig1_match_v145plotSpont(lobvPCs, dataFold, paperFold, savebool);
 sim2PCs = fig1_match_v145plotSpont(sim2PCs, dataFold, paperFold, savebool);
@@ -152,87 +156,55 @@ matchPCs_v145.lobvPCs = lobvPCs;
 matchPCs_v145.sim2PCs = sim2PCs;
 
 if savebool
-    figFold = fullfile(paperFold,'Figures','Fig4','Sub4_summary');
-    if ~exist(figFold,'dir'); mkdir(figFold); end
-    figFold2 = fullfile(dataFold,'paperFigs','Fig4','Sub4_summary');
-    if ~exist(figFold2,'dir'); mkdir(figFold2); end
+    figFold = fullfile(paperFold,'Figures','Fig6','Sub2_matchSummary');
+    if ~exist(figFold,'dir'); mkdir(figFold); end    
     
-    save(fullfile(figFold,'matchPCs_v145.mat'),'lobvPCs','sim2PCs');
-    save(fullfile(figFold2,'matchPCs_v145.mat'),'lobvPCs','sim2PCs');
+    save(fullfile(figFold,'matchPCs_v145.mat'),'lobvPCs','sim2PCs');    
     
     figname = 'spontCorrFR';
     savefig(figCorrFR, fullfile(figFold,[figname,'.fig']));
     saveas(figCorrFR,fullfile(figFold,[figname,'.png']));
-    print(figCorrFR,fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(figCorrFR, fullfile(figFold2,[figname,'.fig']));
-    saveas(figCorrFR,fullfile(figFold2,[figname,'.png']));
-    print(figCorrFR,fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
-    
+    print(figCorrFR,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = 'lobV_behav_heatmap';
     savefig(lobvfigs(1), fullfile(figFold,[figname,'.fig']));
     saveas(lobvfigs(1),fullfile(figFold,[figname,'.png']));
-    print(lobvfigs(1),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(lobvfigs(1), fullfile(figFold2,[figname,'.fig']));
-    saveas(lobvfigs(1),fullfile(figFold2,[figname,'.png']));
-    print(lobvfigs(1),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+    print(lobvfigs(1),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');    
     
     figname = 'lobV_reward_heatmap';
     savefig(lobvfigs(2), fullfile(figFold,[figname,'.fig']));
     saveas(lobvfigs(2),fullfile(figFold,[figname,'.png']));
-    print(lobvfigs(2),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(lobvfigs(2), fullfile(figFold2,[figname,'.fig']));
-    saveas(lobvfigs(2),fullfile(figFold2,[figname,'.png']));
-    print(lobvfigs(2),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+    print(lobvfigs(2),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = 'lobV_behav_summary';
     savefig(lobvfigs(3), fullfile(figFold,[figname,'.fig']));
     saveas(lobvfigs(3),fullfile(figFold,[figname,'.png']));
-    print(lobvfigs(3),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(lobvfigs(3), fullfile(figFold2,[figname,'.fig']));
-    saveas(lobvfigs(3),fullfile(figFold2,[figname,'.png']));
-    print(lobvfigs(3),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
-    
+    print(lobvfigs(3),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
+        
     figname = 'lobV_reward_summary';
     savefig(lobvfigs(4), fullfile(figFold,[figname,'.fig']));
     saveas(lobvfigs(4),fullfile(figFold,[figname,'.png']));
-    print(lobvfigs(4),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(lobvfigs(4), fullfile(figFold2,[figname,'.fig']));
-    saveas(lobvfigs(4),fullfile(figFold2,[figname,'.png']));
-    print(lobvfigs(4),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+    print(lobvfigs(4),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = 'sim2_behav_heatmap';
     savefig(sim2figs(1), fullfile(figFold,[figname,'.fig']));
     saveas(sim2figs(1),fullfile(figFold,[figname,'.png']));
-    print(sim2figs(1),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(sim2figs(1), fullfile(figFold2,[figname,'.fig']));
-    saveas(sim2figs(1),fullfile(figFold2,[figname,'.png']));
-    print(sim2figs(1),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
-    
+    print(sim2figs(1),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
+        
     figname = 'sim2_reward_heatmap';
     savefig(sim2figs(2), fullfile(figFold,[figname,'.fig']));
     saveas(sim2figs(2),fullfile(figFold,[figname,'.png']));
-    print(sim2figs(2),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(sim2figs(2), fullfile(figFold2,[figname,'.fig']));
-    saveas(sim2figs(2),fullfile(figFold2,[figname,'.png']));
-    print(sim2figs(2),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+    print(sim2figs(2),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = 'sim2_behav_summary';
     savefig(sim2figs(3), fullfile(figFold,[figname,'.fig']));
     saveas(sim2figs(3),fullfile(figFold,[figname,'.png']));
-    print(sim2figs(3),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(sim2figs(3), fullfile(figFold2,[figname,'.fig']));
-    saveas(sim2figs(3),fullfile(figFold2,[figname,'.png']));
-    print(sim2figs(3),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+    print(sim2figs(3),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = 'sim2_reward_summary';
     savefig(sim2figs(4), fullfile(figFold,[figname,'.fig']));
     saveas(sim2figs(4),fullfile(figFold,[figname,'.png']));
-    print(sim2figs(4),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-    savefig(sim2figs(4), fullfile(figFold2,[figname,'.fig']));
-    saveas(sim2figs(4),fullfile(figFold2,[figname,'.png']));
-    print(sim2figs(4),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
-    
+    print(sim2figs(4),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');    
 end
 
 end

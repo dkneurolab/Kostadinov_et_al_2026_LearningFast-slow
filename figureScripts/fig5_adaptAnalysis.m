@@ -1,4 +1,4 @@
-function fig5_adaptAnalysis(matchData, glmParams, dataFold, paperFold, savebool)
+function fig5_adaptAnalysis(matchData, sessionsv5, glmParams, dataFold, paperFold, savebool)
 %% Settings:
 % Decimation:
 nDec = 50;
@@ -10,11 +10,25 @@ matchData = rmfield(matchData,{'on1','on2','rewC1','rewC2','rewR1','rewR2'});
 % Load in v4 sigSummary
 glmFold0 = fullfile(paperFold,'Figures','Fig3','Sub3_SummaryBars');
 glmFold = fullfile(glmFold0,sprintf('%s_%s_alpha%i',glmParams.dataType,glmParams.distr,glmParams.alpha*100));
-glmSummary = load(fullfile(glmFold,'sigSummary.mat')); glmSummary = glmSummary.glmSummary;
+glmSummary = load(fullfile(glmFold,'sigSummary_v4n.mat')); glmSummary = glmSummary.glmSummary;
 
-% 
-pathv5Behav = fullfile(paperFold,'Figures','Fig1','Sub1_percMovCorr');
-sessionsv5 = load(fullfile(pathv5Behav,'percMovCorrect_v5.mat')); sessionsv5 = sessionsv5.sessionsv5;
+% Load settings data for v5 sessions
+behavFold = fullfile(dataFold,'04_Behav-processed');
+for isesh = 1:numel(sessionsv5)    
+    setsDir = dir(fullfile(behavFold,sessionsv5(isesh).name,sessionsv5(isesh).date,'Behav*',[sessionsv5(isesh).name,'_',sessionsv5(isesh).date,'_sets.mat']));
+    
+    if ~isempty(setsDir)        
+        sets = load(fullfile(setsDir.folder,setsDir.name));
+        sessionsv5(isesh).sets = sets.sets;
+    else
+        dataDir = dir(fullfile(behavFold,sessionsv5(isesh).name,sessionsv5(isesh).date,'Behav*',[sessionsv5(isesh).name,'_',sessionsv5(isesh).date,'.mat']));        
+        datastruct = load(fullfile(dataDir.folder,dataDir.name));
+        sets = datastruct.datastruct.sets;
+        sets = Rot2p_changetrials(sets);
+        save(fullfile(dataDir.folder,[sessionsv5(isesh).name,'_',sessionsv5(isesh).date,'_sets.mat']),'sets')
+        sessionsv5(isesh).sets = sets;
+    end    
+end
 
 %% Trim
 glmGood = false(numel(glmSummary),1);
@@ -243,19 +257,6 @@ clear dataPath0 gainDiv glmv5lobv0 glmv5sim20 iFOV iMovSort jMov jRew roisv4 roi
 clear spkMov spkRew spkUnder spkOver v1 vMov vRew vUnder vOver x0 x1 x2 xMov xRew xUnder xOver
 
 %% Get the data:
-% % Setting the ranges manually:
-% glmv5lobv(1).ranges = {[-29:0],[1:15],[46:75],[101:130],[1:15]}; %dk103
-% glmv5lobv(2).ranges = {[-29:0],[1:15],[31:60],[131:160],[1:15]}; %dk105
-% glmv5lobv(3).ranges = {[-29:0],[1:15],[76:105],[121:150],[1:15]}; %dk169
-% glmv5lobv(4).ranges = {[-29:0],[1:15],[61:90],[106:135],[1:15]}; %dk171
-% glmv5lobv(5).ranges = {[-29:0],[1:15],[61:90],[106:135],[1:15]}; %dk199
-% 
-% glmv5sim2(1).ranges = {[-29:0],[1:15],[46:75],[86:105],[1:15]}; %dk103
-% glmv5sim2(2).ranges = {[-29:0],[1:15],[31:60],[86:115],[1:15]}; %dk105
-% glmv5sim2(3).ranges = {[-29:0],[1:15],[76:105],[121:150],[1:15]}; %dk169
-% glmv5sim2(4).ranges = {[-29:0],[1:15],[61:90],[106:135],[1:15]}; %dk171
-% glmv5sim2(5).ranges = {[-29:0],[1:15],[61:90],[106:135],[1:15]}; %dk199
-
 % Setting the ranges programatically:
 behavAdapt = load(fullfile(paperFold,'Figures\Fig1\Sub1_v5Adaptation','vAdaptationCurves.mat'));
 for iBehavAll = 1:numel(behavAdapt.sessionsv5)
@@ -370,9 +371,6 @@ end
 clear dataOut figOut iPlot plotSets figname
 
 %%
-% rangeBase = [-29:0]; rangeEarly = [1:15]; rangeMid = [46:75]; rangeLate = [96:125]; rangeWash = [1:15];
-
-
 lobvdata = struct;
 for iFOV = 1:numel(glmv5lobv)
     lobvdata(iFOV).name = seshv5lobv(iFOV).name;
@@ -959,7 +957,8 @@ title('sim2 Overshoots - mov PCs')
 
 
 if savebool
-    savFold = fullfile(paperFold,'Figures','Fig5','Sub2_behavSummary');    
+    savFold = fullfile(paperFold,'Figures','Fig5','Sub2_behavSummary');
+    if ~exist(savFold,'dir'); mkdir(savFold); end
     figname = 'lobvmov';
     savefig(f1, fullfile(savFold,[figname,'.fig']));
     saveas(f1,fullfile(savFold,[figname,'.png']));
@@ -1498,6 +1497,7 @@ title('Base vs Wash')
 
 if savebool    
     savFold = fullfile(paperFold,'Figures','Fig5','Sub2_behavSummary');
+    if ~exist(savFold,'dir'); mkdir(savFold); end
     figname = 'movScatter';
     savefig(fscat1, fullfile(savFold,[figname,'.fig']));
     saveas(fscat1,fullfile(savFold,[figname,'.png']));

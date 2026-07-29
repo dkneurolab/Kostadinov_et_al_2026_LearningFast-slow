@@ -324,7 +324,7 @@ set(gca,'LineWidth',2,'XColor','k','YColor','k','Layer', 'Top','FontSize',20,'Ti
 title('v4 learning curves - good trials');
 xlabel({'Days training on','expert task'});
 
-[percC_P, percC_Table, percC_Stats] = kruskalwallis(perC_allGood2);
+[percC_P, percC_Table, percC_Stats] = kruskalwallis(perC_allGood2');
 percC_Stats_post = multcompare(percC_Stats, 'Ctype','bonferroni');
 
 statsAll = v2struct(percC_P,percC_Table,percC_Stats, percC_Stats_post);
@@ -343,7 +343,7 @@ if savebool
     saveas(fHistAll,fullfile(figFold,[figname,'.png']));
     print(fHistAll,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
-    save(fullfile(figFold,'v4LearningCurves.mat'),'percC_All','percC_Good','histBins_coarse','histBins_fine','stairsV4_allCoarse','stairsV4_allFine','stairsV1C_all','stairsV1F_all','seshAll','seshNaive', 'statsAll');    
+    save(fullfile(figFold,'v4LearningCurves.mat'),'percC_All','percC_Good', 'perC_allGood2', 'histBins_coarse','histBins_fine','stairsV4_allCoarse','stairsV4_allFine','stairsV1C_all','stairsV1F_all','seshAll','seshNaive', 'statsAll');    
 
 end
 

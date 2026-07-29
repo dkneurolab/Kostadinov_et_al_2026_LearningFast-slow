@@ -169,7 +169,7 @@ if savebool
     savename = 'LobVvsSim2_matchPercHeat';
     savefig(fHeat,fullfile(figFold,[savename,'.fig']));
     saveas(fHeat,fullfile(figFold,[savename,'.png']));
-    print(fHeat,fullfile(figFold,[savename,'.eps']), '-depsc', '-painters');
+    print(fHeat,fullfile(figFold,[savename,'.eps']), '-depsc', '-vector');
     save(fullfile(figFold,[savename,'.mat']),'GLMheatmap');
     
 end

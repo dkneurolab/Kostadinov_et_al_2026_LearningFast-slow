@@ -6,7 +6,8 @@ sim2path0 = fullfile(dataFold,sprintf('Version_%i',dataPaths(1).version),dataPat
     sprintf('%s_%s',dataPaths(1).date,dataPaths(1).fov));
 sim2path = fullfile(sim2path0,'GLM');
 
-figFold = fullfile(paperFold,'Figures','Fig2','Sub1_BehavExample');
+figFold = fullfile(paperFold,'Figures','Fig3','Sub1_BehavExample');
+if ~exist(figFold,'dir'); mkdir(figFold); end
 
 %% DK169 - lobV:
 

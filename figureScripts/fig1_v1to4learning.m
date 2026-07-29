@@ -60,14 +60,10 @@ for iMouse = 1:size(mouseNames,1)
     end
     if savebool
         if ~exist(figFold,'dir'); mkdir(figFold); end
-        if ~exist(figFold2,'dir'); mkdir(figFold); end
         figname = sprintf('%s_v1_v4_movTraces',learnMat(iMouse).name);
         savefig(f1, fullfile(figFold,[figname,'.fig']));
         saveas(f1,fullfile(figFold,[figname,'.png']));
-        print(f1,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
-        savefig(f1, fullfile(figFold2,[figname,'.fig']));
-        saveas(f1,fullfile(figFold2,[figname,'.png']));
-        print(f1,fullfile(figFold2,[figname,'.eps']), '-depsc', '-vector');
+        print(f1,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');        
     end
         
 end
@@ -97,6 +93,7 @@ Rmov_grps = cat(1,v1_grp,v4_1_grp,v4_2_grp,v4_3_grp,v4_n_grp);
 [movP, movTable, movStats] = kruskalwallis(Rmov_vector, Rmov_grps);
 Rmov_stats = multcompare(movStats, 'Ctype','bonferroni');
 
+statsAll = v2struct(pPercMov, movP,movTable,movStats, Rmov_stats);
 
 RmovMu(1) = mean(Rmov_v1,'omitnan');
 RmovSem(1) = std(Rmov_v1,'omitnan')/sqrt(sum(~isnan(Rmov_v1)));
@@ -139,12 +136,8 @@ if savebool
     figname = 'Summary_v1_v4_movTraces';
     savefig(f2, fullfile(figFold,[figname,'.fig']));
     saveas(f2,fullfile(figFold,[figname,'.png']));
-    print(f2,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
-    savefig(f2, fullfile(figFold2,[figname,'.fig']));
-    saveas(f2,fullfile(figFold2,[figname,'.png']));
-    print(f2,fullfile(figFold2,[figname,'.eps']), '-depsc', '-vector');
-    save(fullfile(figFold,'v1_v4_learnat.mat'),'learnMat');
-    save(fullfile(figFold2,'v1_v4_learnat.mat'),'learnMat');
+    print(f2,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');    
+    save(fullfile(figFold,'v1_v4_learnMat.mat'),'learnMat','statsAll');
 end
 
 end

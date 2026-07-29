@@ -68,8 +68,7 @@ fprintf('LS: nRew down: %i of %i\n',sum(rewDown_sim2),numel(rewDown_sim2));
 
 %% Save!
 if savebool
-    a = 4
-
+    save(fullfile(figFold,'sigSummary_modDirection.mat'),'modDirs_lobv', 'modDirs_sim2');
 end
 
 end

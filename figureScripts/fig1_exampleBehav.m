@@ -41,22 +41,22 @@ if savebool
     figname = sprintf('%s_v1_Trials_%i_to_%i',dataPaths(1).name,exTrials1(1),exTrials1(end));
     savefig(figv1, fullfile(figFold,[figname,'.fig']));
     saveas(figv1,fullfile(figFold,[figname,'.png']));
-    print(figv1,fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+    print(figv1,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = sprintf('%s_v4_1_Trials_%i_to_%i',dataPaths(1).name,exTrials41(1),exTrials41(end));
     savefig(figv41, fullfile(figFold,[figname,'.fig']));
     saveas(figv41,fullfile(figFold,[figname,'.png']));
-    print(figv41,fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+    print(figv41,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = sprintf('%s_v4_n_Trials_%i_to_%i',dataPaths(1).name,exTrials4n(1),exTrials4n(end));
     savefig(figv4n, fullfile(figFold,[figname,'.fig']));
     saveas(figv4n,fullfile(figFold,[figname,'.png']));
-    print(figv4n,fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+    print(figv4n,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     
     figname = sprintf('%s_v5_Trials_%i_to_%i',dataPaths(1).name,exTrials5(1),exTrials5(end));
     savefig(figv5, fullfile(figFold,[figname,'.fig']));
     saveas(figv5,fullfile(figFold,[figname,'.png']));
-    print(figv5,fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+    print(figv5,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
 end
 
 end

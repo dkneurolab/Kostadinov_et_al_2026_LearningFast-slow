@@ -1,6 +1,6 @@
 function fig3_GLMtrace_heat(sessions,dataFold,paperFold,glmParams,tracebool,savebool)
 %% Make save dirs
-figFold0 = fullfile(paperFold,'Figures','Fig2','Sub2_Traces+Heatmaps');
+figFold0 = fullfile(paperFold,'Figures','Fig3','Sub2_Traces+Heatmaps');
 figFold = fullfile(figFold0,sprintf('%s_%s_alpha%i',glmParams.dataType,glmParams.distr,glmParams.alpha*100));
 figFold1 = fullfile(figFold,'Heatmaps');
 figFold2 = fullfile(figFold,'Traces');
@@ -71,34 +71,34 @@ for iSesh = 1:numel(sessions)
 
         savefig(fVis,fullfile(figFold1,[figName,'_On.fig']));
         saveas(fVis,fullfile(figFold1,[figName,'_On.png']));
-        print(fVis,fullfile(figFold1,[figName,'_On.eps']), '-depsc', '-painters');
+        print(fVis,fullfile(figFold1,[figName,'_On.eps']), '-depsc', '-vector');
         savefig(fVisSig,fullfile(figFold1,[figName,'_OnSig.fig']));
         saveas(fVisSig,fullfile(figFold1,[figName,'_OnSig.png']));
-        print(fVisSig,fullfile(figFold1,[figName,'_OnSig.eps']), '-depsc', '-painters');
+        print(fVisSig,fullfile(figFold1,[figName,'_OnSig.eps']), '-depsc', '-vector');
         
         savefig(fMov,fullfile(figFold1,[figName,'_Mov.fig']));
         saveas(fMov,fullfile(figFold1,[figName,'_Mov.png']));
-        print(fMov,fullfile(figFold1,[figName,'_Mov.eps']), '-depsc', '-painters');
+        print(fMov,fullfile(figFold1,[figName,'_Mov.eps']), '-depsc', '-vector');
         savefig(fMovSig,fullfile(figFold1,[figName,'_MovSig.fig']));
         saveas(fMovSig,fullfile(figFold1,[figName,'_MovSig.png']));
-        print(fMovSig,fullfile(figFold1,[figName,'_MovSig.eps']), '-depsc', '-painters');
+        print(fMovSig,fullfile(figFold1,[figName,'_MovSig.eps']), '-depsc', '-vector');
         
         savefig(fRew,fullfile(figFold1,[figName,'_Rew.fig']));
         saveas(fRew,fullfile(figFold1,[figName,'_Rew.png']));
-        print(fRew,fullfile(figFold1,[figName,'_Rew.eps']), '-depsc', '-painters');
+        print(fRew,fullfile(figFold1,[figName,'_Rew.eps']), '-depsc', '-vector');
         savefig(fRewSig,fullfile(figFold1,[figName,'_RewSig.fig']));
         saveas(fRewSig,fullfile(figFold1,[figName,'_RewSig.png']));
-        print(fRewSig,fullfile(figFold1,[figName,'_RewSig.eps']), '-depsc', '-painters');
+        print(fRewSig,fullfile(figFold1,[figName,'_RewSig.eps']), '-depsc', '-vector');
         
         savefig(fLick,fullfile(figFold1,[figName,'_Lick.fig']));
         saveas(fLick,fullfile(figFold1,[figName,'_Lick.png']));
-        print(fLick,fullfile(figFold1,[figName,'_Lick.eps']), '-depsc', '-painters');
+        print(fLick,fullfile(figFold1,[figName,'_Lick.eps']), '-depsc', '-vector');
         savefig(fLickSig,fullfile(figFold1,[figName,'_LickSig.fig']));
         saveas(fLickSig,fullfile(figFold1,[figName,'_LickSig.png']));
-        print(fLickSig,fullfile(figFold1,[figName,'_LickSig.eps']), '-depsc', '-painters');
+        print(fLickSig,fullfile(figFold1,[figName,'_LickSig.eps']), '-depsc', '-vector');
     end
     
-    close all
+     close all
 end
 
 end

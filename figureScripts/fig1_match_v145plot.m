@@ -1,4 +1,4 @@
-function [figout,matchPCs] = fig1_match_v145plot(matchFOVs,fovname)
+function [figout,matchPCs] = fig1_match_v145plot(matchFOVs,fovname, fs)
 %% Loop through and assemble struct with matching rois and x-validated v4 trials
 
 matchPCs = rmfield(matchFOVs,{'v1date','v4_Ndate','v5date','ilobv','isim2','v14rois','v45rois'});
@@ -73,46 +73,46 @@ end
 %% Combine traces to get plottable vectors
 
 v145on = cat(2,matchPCs.v145on); spkMap0on = cat(2,v145on.spkMap0);
-coeff = pca(spkMap0on(end/2-14:end/2+15,:));
+coeff = pca(spkMap0on(end/2-fs.imfs/2+1:end/2+fs.imfs/2,:));
 [~, iSortOn] = sort(coeff(:,1),'descend');
 cols0 = cat(1,matchPCs.col); cols0 = cols0(iSortOn,:);
 colsOn = zeros([1 size(cols0)]); colsOn(1,:,:) = cols0; colsOn = permute(repmat(colsOn,5,1,1),[2 1 3]); clear cols0
-v145onPlot = fig1_match_v145trim(v145on,iSortOn);
+v145onPlot = fig1_match_v145trim(v145on,iSortOn,fs,0);
 
 v145mov = cat(2,matchPCs.v145mov); spkMap0mov = cat(2,v145mov.spkMap0);
-coeff = pca(spkMap0mov(end/2-14:end/2+15,:));
+coeff = pca(spkMap0mov(end/2-fs.imfs/2+1:end/2+fs.imfs/2,:));
 [~, iSortOn] = sort(coeff(:,1),'descend');
 cols0 = cat(1,matchPCs.col); cols0 = cols0(iSortOn,:);
 colsMov = zeros([1 size(cols0)]); colsMov(1,:,:) = cols0; colsMov = permute(repmat(colsMov,5,1,1),[2 1 3]); clear cols0
-v145movPlot = fig1_match_v145trim(v145mov,iSortOn);
+v145movPlot = fig1_match_v145trim(v145mov,iSortOn,fs,0);
 
 v145rewT = cat(2,matchPCs.v145rewT); spkMap0rewT = cat(2,v145rewT.spkMap0);
-coeff = pca(spkMap0rewT(end/2-14:end/2+15,:));
+coeff = pca(spkMap0rewT([end/2-fs.imfs/2+1:end/2+fs.imfs/2]+fs.rewDelay*fs.imfs,:));
 [~, iSortOn] = sort(coeff(:,1),'descend');
 cols0 = cat(1,matchPCs.col); cols0 = cols0(iSortOn,:);
 colsRewT = zeros([1 size(cols0)]); colsRewT(1,:,:) = cols0; colsRewT = permute(repmat(colsRewT,5,1,1),[2 1 3]); clear cols0
-v145rewTPlot = fig1_match_v145trim(v145rewT,iSortOn);
+v145rewTPlot = fig1_match_v145trim(v145rewT,iSortOn,fs,fs.rewDelay);
 
 v145rewC = cat(2,matchPCs.v145rewC); spkMap0rewC = cat(2,v145rewC.spkMap0);
-coeff = pca(spkMap0rewC(end/2-14:end/2+15,:));
+coeff = pca(spkMap0rewC(end/2-fs.imfs/2+1:end/2+fs.imfs/2,:));
 [~, iSortOn] = sort(coeff(:,1),'descend');
 cols0 = cat(1,matchPCs.col); cols0 = cols0(iSortOn,:);
 colsRewC = zeros([1 size(cols0)]); colsRewC(1,:,:) = cols0; colsRewC = permute(repmat(colsRewC,5,1,1),[2 1 3]); clear cols0
-v145rewCPlot = fig1_match_v145trim(v145rewC,iSortOn);
+v145rewCPlot = fig1_match_v145trim(v145rewC,iSortOn,fs,0);
 
 v145rewR = cat(2,matchPCs.v145rewR); spkMap0rewR = cat(2,v145rewR.spkMap0);
-coeff = pca(spkMap0rewR(end/2-14:end/2+15,:));
+coeff = pca(spkMap0rewR(end/2-fs.imfs/2+1:end/2+fs.imfs/2,:));
 [~, iSortOn] = sort(coeff(:,1),'descend');
 cols0 = cat(1,matchPCs.col); cols0 = cols0(iSortOn,:);
 colsRewR = zeros([1 size(cols0)]); colsRewR(1,:,:) = cols0; colsRewR = permute(repmat(colsRewR,5,1,1),[2 1 3]); clear cols0
-v145rewRPlot = fig1_match_v145trim(v145rewR,iSortOn);
+v145rewRPlot = fig1_match_v145trim(v145rewR,iSortOn,fs,0);
 
 
 %% Plot heatmaps and mean responses for behaviour
 
 nRois = size(colsOn,1);
-t2p = ((1:180)/30)-1/60;
-tvr = ((1:600)/100)-1/200;
+t2p = ((1:fs.imfs*6)/fs.imfs)-1/(fs.imfs*2);
+tvr = ((1:fs.behavfs*6)/fs.behavfs)-1/(fs.behavfs*2);
 
 figout(1) = figure;
 subplot(6,15,[1:4,16:19,31:34]);

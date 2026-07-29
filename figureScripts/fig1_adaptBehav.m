@@ -209,7 +209,7 @@ bar(iRow,mean(endPosReal_grp(iRow,:),2,'omitnan'),0.5,'EdgeColor','none','FaceCo
 errorbar(iRow, mean(endPosReal_grp(iRow,:),2,'omitnan'), std(endPosReal_grp(iRow,:),[],2,'omitnan')/sqrt(numel(seshOut)),'k','CapSize',0,'LineWidth',2);
 iRow = iRow+1;
 bar(iRow,mean(endPosReal_grp(iRow,:),2,'omitnan'),0.5,'EdgeColor','none','FaceColor',[.5 0 .5],'FaceAlpha',0.5);
-errorbar(iRow, mean(endPosReal_grp(iRow,:),2,'omitnan'), std(efndPosReal_grp(iRow,:),[],2,'omitnan')/sqrt(numel(seshOut)),'k','CapSize',0,'LineWidth',2);
+errorbar(iRow, mean(endPosReal_grp(iRow,:),2,'omitnan'), std(endPosReal_grp(iRow,:),[],2,'omitnan')/sqrt(numel(seshOut)),'k','CapSize',0,'LineWidth',2);
 iRow = iRow+1;
 bar(iRow,mean(endPosReal_grp(iRow,:),2,'omitnan'),0.5,'EdgeColor','none','FaceColor',[0 0 .5],'FaceAlpha',0.5);
 errorbar(iRow, mean(endPosReal_grp(iRow,:),2,'omitnan'), std(endPosReal_grp(iRow,:),[],2,'omitnan')/sqrt(numel(seshOut)),'k','CapSize',0,'LineWidth',2);

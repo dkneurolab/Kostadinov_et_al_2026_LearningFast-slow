@@ -4,11 +4,11 @@ function fig6_analysis_sfn(matchData, paperFold, savebool)
 % load('/Users/dimitar/Desktop/imData/FastSlowLearning/matchDataBehav.mat')
 imfs = 30;
 % Load v4 significant GLM summary:
-sigSummary = load(fullfile(paperFold,'Figures/Fig3/Sub3_SummaryBars/spk_gaussian_alpha50/sigSummary.mat'));
+sigSummary = load(fullfile(paperFold,'Figures/Fig3/Sub3_SummaryBars/spk_gaussian_alpha50/sigSummary_v4n.mat'));
 glmSummary = sigSummary.glmSummary;
 
 % Indices of 145 matched ROIs:
-v145Matched = load(fullfile(paperFold,'Figures/Fig1/Sub4_summary/matchPCs_v145.mat'));
+v145Matched = load(fullfile(paperFold,'Figures/Fig6/Sub2_matchSummary/matchPCs_v145.mat'));
 v145Matched = cat(2,v145Matched.lobvPCs,v145Matched.sim2PCs);
 
 % v144 kernels:
@@ -294,7 +294,7 @@ statsOut = v2struct(oLobvMov, oLobvRew, oSim2Mov, oSim2Rew);
 
 if savebool
     figname = 'fast_vs_slow_learning_log';
-    savFold = fullfile(paperFold,'Figures/Fig6/Sub1_slow-fastScatter');
+    savFold = fullfile(paperFold,'Figures','Fig6','Sub3_slow-fastScatter');
     if ~isfolder(savFold); mkdir(savFold); end
     savefig(f1, fullfile(savFold,[figname,'.fig']));
     saveas(f1,fullfile(savFold,[figname,'.png']));

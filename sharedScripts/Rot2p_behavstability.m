@@ -8,6 +8,12 @@ else
     gaindiv = 37.5/360*4.5*pi; % Set gain to 1 if it's not there, may want to fix eventually
 end
 
+if isfield(sets,'gainfactor')
+    adaptGain = sets.gainfactor;
+else
+    adaptGain = 1;
+end
+
 paqfs = inits.paqfs;
 mintime = inits.mintime;
 
@@ -238,7 +244,7 @@ if savebool
     savename = [inits.mousename,'_',inits.date,'_behavstability'];
     savefig(f1,fullfile(inits.targetfolder,[savename,'.fig']),'compact')
     saveas(f1,fullfile(inits.targetfolder,[savename,'.png']));
-    print(fullfile(inits.targetfolder,[savename,'.eps']), '-depsc', '-painters');
+    print(fullfile(inits.targetfolder,[savename,'.eps']), '-depsc', '-vector');
 end
 
 %% Package output structure
@@ -283,6 +289,9 @@ outstruct.percC = numC(:,1)./numC(:,2);
 outstruct.xend = mean(outstruct.offxmu(151:160,:))';
 outstruct.rhomovmu = rhomovmu;
 outstruct.rhomovsd = rhomovsd;
+outstruct.adaptGain = adaptGain;
+outstruct.gainDiv = gaindiv;
+
 
 
 end

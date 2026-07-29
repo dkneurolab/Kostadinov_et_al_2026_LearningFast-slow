@@ -88,18 +88,12 @@ for i = 1:numel(lobData)
     legend({'Naive-Trained','Trained-Adapt.'})
     
     if savebool
-        figFold = fullfile(paperFold,'Figures','Fig1','Sub4b_summarySpont');
-        if ~exist(figFold,'dir'); mkdir(figFold); end
-        figFold2 = fullfile(dataFold,'paperFigs','Fig1','Sub4b_summarySpont');
-        if ~exist(figFold2,'dir'); mkdir(figFold2); end
+        figFold = fullfile(paperFold,'Figures','Fig6','Sub1_summarySpont');
+        if ~exist(figFold,'dir'); mkdir(figFold); end        
         figname = sprintf('%s_%s_v145corrs',lobData(i).name,lobData(i).fov);
         savefig(figout(i), fullfile(figFold,[figname,'.fig']));
         saveas(figout(i),fullfile(figFold,[figname,'.png']));
-        print(figout(i),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
-        savefig(figout(i), fullfile(figFold2,[figname,'.fig']));
-        saveas(figout(i),fullfile(figFold2,[figname,'.png']));
-        print(figout(i),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
-
+        print(figout(i),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     end
     
 end
