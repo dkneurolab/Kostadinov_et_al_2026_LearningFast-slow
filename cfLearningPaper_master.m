@@ -7,7 +7,8 @@ if ismac
     paperFold      = '/Users/dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
 elseif ispc
     dataFold     = '//rds.er.kcl.ac.uk/prj_dn_dklab/Dimitar/Analysis_HausserLab'; % Where the raw data lives
-    paperFold      = 'C:/Users/Dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
+    paperFold      = 'C:\Users\Dimitar\Dropbox\DK papers\2022_Kostadinov_FastSlowLearning'; % Where the figures and data are saved
+    % paperFold      = 'C:/Users/Dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
 end
 % Add path to figure-specific scripts
 addpath(genpath(fullfile(paperFold,'figureScripts')))
@@ -52,6 +53,7 @@ sessionsv5_behav = sessions_Behav(cat(1,sessions_Behav.version) == 5);
 sessionsv4_n    = sessionsv4_im([2,3,5,6,8,10,12,14,16,18,20,22]);
 sessionsv4_1    = sessionsv4_im([1,4,7,9,11,13,15,17,19,21]);
 pcaVar          = 80; % Percent of PCA variance to be used in for design matrix reduction
+nIntermSesh     = 6;
 
 % Set session parameters:
 savebool        = true; % Save data, etc.
@@ -74,10 +76,9 @@ fig1_exampleBehav(sessions_im(13:16),dataFold,paperFold,savebool)
 % Extract behavioural stability for v1 data
 seshV1_movCorr = fig1_v1stability(behavData_v1,dataFold,paperFold,savebool);
 % Plot v1 and v4 learning curves
-nLearningSesh = 6;
-seshV4_movCorr = fig1_v4learning(seshV1_movCorr,behavData_v4_1,behavData_v4_n,nLearningSesh,dataFold,paperFold,savebool);
+seshV4_movCorr = fig1_v4learning(seshV1_movCorr,behavData_v4_1,behavData_v4_n,nIntermSesh,dataFold,paperFold,savebool);
 % Plot v1-v4 example data and summary
-fig1_v1to4learning(seshV1_movCorr, seshV4_movCorr,nLearningSesh+2,dataFold,paperFold,savebool);
+fig1_v1to4learning(seshV1_movCorr, seshV4_movCorr,nIntermSesh+2,dataFold,paperFold,savebool);
 
 % Plot v5 adaptation curves
 adaptTrialGrp = 30;
@@ -272,3 +273,24 @@ matchStats145 = fig2_matchStats(matchData, matchPCs_v145, dataFold, paperFold,'v
 % Comparing v1-4 chagnes to v5 adaptation:
 fig6_analysis_sfn(matchData, paperFold, savebool)
 
+
+
+
+
+
+%% -------------------Review experiments -------------------
+
+% R2 - MP1: demonstrate washout from adaptation. New analysis splits first
+% 5 washout trials from rest of washout trials to show that animals start
+% to adapt back
+adaptTrialGrp = 30;
+fig1_adaptBehav_rev1(behavData_v5,adaptTrialGrp,dataFold,paperFold,savebool)
+
+% Remaking and adding some data to slow learning panels of figure 1 to
+% optimize figure space use
+% Plot v1-v4 example data and summary
+figFold = fullfile(paperFold,'Figures','Fig1','Sub1_v1Learning');
+seshV1_movCorr = load(fullfile(figFold,'v1LearningCurves.mat')); seshV1_movCorr = seshV1_movCorr.sessionsv1;
+figFold = fullfile(paperFold,'Figures','Fig1','Sub1_v4Learning');
+seshV4_movCorr = load(fullfile(figFold,'v4LearningCurves.mat')); seshV4_movCorr = seshV4_movCorr.seshAll;
+fig1_v1to4learning_rev1(seshV1_movCorr, seshV4_movCorr,nIntermSesh+2,dataFold,paperFold,savebool);
