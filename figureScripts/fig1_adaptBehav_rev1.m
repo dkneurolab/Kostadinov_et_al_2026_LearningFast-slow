@@ -168,6 +168,7 @@ end
 % Percent correct and endpoint positions
 endPos_grp = 1-cat(2,seshOut.endPosMu);
 endPosReal_grp = 1-cat(2,seshOut.endPosRealMu);
+endPosReal_grp2 = endPosReal_grp ./ endPosReal_grp(1,:);
 percC_grp = cat(2,seshOut.percC);
 endTrace_grp = zeros(numel(seshOut(1).endTrace.endTraceMu),numel(seshOut));
 endTraceReal_grp = endTrace_grp;
@@ -176,9 +177,13 @@ for iSesh = 1:numel(seshOut)
     endTraceReal_grp(:,iSesh) = seshOut(iSesh).endTrace.endTraceRealMu;
 end
 
+% Endpoint stats
+[endPos_P, endPos_Table, endPos_Stats] = kruskalwallis(endPosReal_grp2');
+endPos_Stats_post = multcompare(endPos_Stats, 'Ctype','bonferroni');
+% Perc. correct stats
 [percC_P, percC_Table, percC_Stats] = kruskalwallis(percC_grp');
 percC_Stats_post = multcompare(percC_Stats, 'Ctype','bonferroni');
-statsAll = v2struct(percC_P,percC_Table,percC_Stats, percC_Stats_post);
+statsAll = v2struct(endPos_P, endPos_Table, endPos_Stats, endPos_Stats_post, percC_P, percC_Table, percC_Stats, percC_Stats_post);
 
 fBar = figure;
 subplot(2,2,1); pbaspect([1.5 1 1]); hold on;

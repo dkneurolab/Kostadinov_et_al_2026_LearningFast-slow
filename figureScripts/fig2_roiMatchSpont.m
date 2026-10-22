@@ -147,14 +147,14 @@ for i = 1:numel(matchSpont)
         fig1 = figure;
         subplot(2,2,1);
         imagesc(matchSpont(i).R1); axis square; colormap viridis; box off;
-        caxis([prctile(R1lin,1) prctile(R1lin,99)]);
+        clim([prctile(R1lin,1) prctile(R1lin,99)]);
         title(sprintf('%s, %s, version %i on %s',upper(matchSpont(i).name),matchSpont(i).fov,matchSpont(i).v1,matchSpont(i).date1));
         set(gca,'LineWidth',2,'XColor','k','YColor','k','Layer', 'Top','FontSize',20,'TickDir','out');
         xticks([1,20:20:nRois]); yticks([1,20:20:nRois]);
         
         subplot(2,2,3);
         imagesc(matchSpont(i).R2); axis square; colormap viridis; box off;
-        caxis([prctile(R2lin,1) prctile(R2lin,99)]);
+        clim([prctile(R2lin,1) prctile(R2lin,99)]);
         title(sprintf('%s, %s, version %i on %s',upper(matchSpont(i).name),matchSpont(i).fov,matchSpont(i).v2,matchSpont(i).date2));
         set(gca,'LineWidth',2,'XColor','k','YColor','k','Layer', 'Top','FontSize',20,'TickDir','out');
         xticks([1,20:20:nRois]); yticks([1,20:20:nRois]);
@@ -195,10 +195,10 @@ for i = 1:numel(matchSpont)
             
             savefig(fig1, fullfile(figFoldfov1,[figname,'.fig']));
             saveas(fig1,fullfile(figFoldfov1,[figname,'.png']));
-            print(fig1,fullfile(figFoldfov1,[figname,'.eps']), '-depsc', '-painters');
+            print(fig1,fullfile(figFoldfov1,[figname,'.eps']), '-depsc', '-vector');
             savefig(fig1, fullfile(figFoldfov2,[figname,'.fig']));
             saveas(fig1,fullfile(figFoldfov2,[figname,'.png']));
-            print(fig1,fullfile(figFoldfov2,[figname,'.eps']), '-depsc', '-painters');
+            print(fig1,fullfile(figFoldfov2,[figname,'.eps']), '-depsc', '-vector');
             
         end
     end
@@ -319,10 +319,10 @@ if savebool
     figname = ['corrSummary'];
     savefig(fig2, fullfile(figFold,[figname,'.fig']));
     saveas(fig2,fullfile(figFold,[figname,'.png']));
-    print(fig2,fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+    print(fig2,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     savefig(fig2, fullfile(figFold2,[figname,'.fig']));
     saveas(fig2,fullfile(figFold2,[figname,'.png']));
-    print(fig2,fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+    print(fig2,fullfile(figFold2,[figname,'.eps']), '-depsc', '-vector');
     save(fullfile(figFold2,'corrSummary.mat'),'corrSummary');
     
 end

@@ -157,7 +157,7 @@ matchPCs_v144.sim2PCs = sim2PCs;
 
 if savebool
     figFold = fullfile(paperFold,'Figures','Fig4','Sub4_summary');
-    if ~exist(figFold,'dir'); mkdir(figFold); end    
+    if ~exist(figFold,'dir'); mkdir(figFold); end
     
     save(fullfile(figFold,'matchPCs_v144.mat'),'lobvPCs','sim2PCs');    
     

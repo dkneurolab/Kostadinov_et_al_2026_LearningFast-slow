@@ -1,4 +1,4 @@
-function [behavSesh,endProbCoarse,endProbFine] = fig1_adaptBehav_sortTrials(behavSesh,trialInds,trialsGood,behavStability,histBins_coarse,histBins_fine)
+function [behavSesh,endProbCoarse,endProbFine] = fig1_adaptBehav_rev1_sortTrials(behavSesh,trialInds,trialsGood,behavStability,histBins_coarse,histBins_fine)
 
 %% Concatenate endpos data
 % Baseline

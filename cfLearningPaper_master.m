@@ -6,9 +6,10 @@ if ismac
     dataFold     = '/Volumes/prj_dn_dklab/Dimitar/Analysis_HausserLab'; % Where the raw data lives (on server)
     paperFold      = '/Users/dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
 elseif ispc
-    dataFold     = '//rds.er.kcl.ac.uk/prj_dn_dklab/Dimitar/Analysis_HausserLab'; % Where the raw data lives
-    paperFold      = 'C:\Users\Dimitar\Dropbox\DK papers\2022_Kostadinov_FastSlowLearning'; % Where the figures and data are saved
+    % dataFold     = '//rds.er.kcl.ac.uk/prj_dn_dklab/Dimitar/Analysis_HausserLab'; % Where the raw data lives    
     % paperFold      = 'C:/Users/Dimitar/Documents/githubProjects/Kostadinov_et_al_2026_LearningFast-slow'; % Where the figures and data are saved
+    dataFold     = 'E:\Analysis_current'; % Where the raw data lives
+    paperFold      = 'C:\Users\Dimitar\Dropbox\DK papers\2022_Kostadinov_FastSlowLearning'; % Where the figures and data are saved
 end
 % Add path to figure-specific scripts
 addpath(genpath(fullfile(paperFold,'figureScripts')))
@@ -56,7 +57,7 @@ pcaVar          = 80; % Percent of PCA variance to be used in for design matrix 
 nIntermSesh     = 6;
 
 % Set session parameters:
-savebool        = true; % Save data, etc.
+savebool        = false; % Save data, etc.
 closebool       = false; % Close figures after running scripts?
 
 % GLM params:
@@ -273,14 +274,9 @@ matchStats145 = fig2_matchStats(matchData, matchPCs_v145, dataFold, paperFold,'v
 % Comparing v1-4 chagnes to v5 adaptation:
 fig6_analysis_sfn(matchData, paperFold, savebool)
 
-
-
-
-
-
 %% -------------------Review experiments -------------------
 
-% R2 - MP1: demonstrate washout from adaptation. New analysis splits first
+% R2 - MajP1: demonstrate washout from adaptation. New analysis splits first
 % 5 washout trials from rest of washout trials to show that animals start
 % to adapt back
 adaptTrialGrp = 30;
@@ -288,9 +284,28 @@ fig1_adaptBehav_rev1(behavData_v5,adaptTrialGrp,dataFold,paperFold,savebool)
 
 % Remaking and adding some data to slow learning panels of figure 1 to
 % optimize figure space use
-% Plot v1-v4 example data and summary
 figFold = fullfile(paperFold,'Figures','Fig1','Sub1_v1Learning');
 seshV1_movCorr = load(fullfile(figFold,'v1LearningCurves.mat')); seshV1_movCorr = seshV1_movCorr.sessionsv1;
 figFold = fullfile(paperFold,'Figures','Fig1','Sub1_v4Learning');
 seshV4_movCorr = load(fullfile(figFold,'v4LearningCurves.mat')); seshV4_movCorr = seshV4_movCorr.seshAll;
 fig1_v1to4learning_rev1(seshV1_movCorr, seshV4_movCorr,nIntermSesh+2,dataFold,paperFold,savebool);
+
+% R3 - MajP1: Simplifying GLM analysis - using more traditional encoding
+% analysis to identify cells that are active at different epochs
+fig3_Supp_traditionalRFs(dataFold, paperFold, glmParams, savebool)
+
+% R3 - MajP2: matching movements across days
+simThresh = 0.8; % Threshold for matching v1-v41-v4n movements
+nMin = 5; % Minimum number of movements required (likely constrained by v1 sessions)
+xMin = 0.5; % Min displacement per movement
+if ~exist('matchSpont', 'var'); matchSpont = load(fullfile(dataFold,'paperFigs','Fig1','Sub3b_spontFigs','matchDataSpont.mat')); end
+fig4_Supp_movCorrs_rev1(matchSpont, glmParams, simThresh, nMin, xMin, paperFold, savebool)
+
+% R3 - MajP4: matching dendrites across days
+if ~exist('matchData', 'var'); matchData = load(fullfile(dataFold,'paperFigs','Fig4','Sub3_behavFigs','matchDataBehav.mat')); matchData = matchData.matchData; end
+nEx = 10;
+fig2_Supp_roiCorrs_rev1(matchData, nEx, paperFold, savebool);
+
+% R3 - MinP12: Event detection stats
+fig3_Supp_eventRateSD(sessions_im, dataFold)
+

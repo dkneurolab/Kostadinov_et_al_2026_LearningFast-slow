@@ -1,4 +1,4 @@
-function matchData = fig1_matchedROIs_vs_days(dataFold,paperFold,matchColors,savebool)
+function matchData = fig2_matchedROIs_vs_days(dataFold,paperFold,matchColors,savebool)
 % Calculate percentage of matching cells across days for all recordings
 
 
@@ -172,7 +172,7 @@ if savebool
     figname = 'matchROIvsTime';
     savefig(figout, fullfile(figFold,[figname,'.fig']));
     saveas(figout,fullfile(figFold,[figname,'.png']));
-    print(figout,fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+    print(figout,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
     matchROIs = matchData;
     save(fullfile(figFold,'matchROIvsTime.mat'),'matchROIs','oMatch','oRoi');
     
@@ -180,7 +180,7 @@ if savebool
     if ~exist(figFold2,'dir'); mkdir(figFold2); end
     savefig(figout, fullfile(figFold2,[figname,'.fig']));
     saveas(figout,fullfile(figFold2,[figname,'.png']));
-    print(figout,fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+    print(figout,fullfile(figFold2,[figname,'.eps']), '-depsc', '-vector');
     save(fullfile(figFold2,'matchROIvsTime.mat'),'matchROIs','oMatch','oRoi');
 end
 

@@ -129,58 +129,58 @@ for i = 1:numel(matchData)
             figname1 = '01_FOVs_raw';
             savefig(figs(1), fullfile(figFoldfov1,[figname1,'.fig']));
             saveas(figs(1),fullfile(figFoldfov1,[figname1,'.png']));
-            print(figs(1),fullfile(figFoldfov1,[figname1,'.eps']), '-depsc', '-painters');
+            print(figs(1),fullfile(figFoldfov1,[figname1,'.eps']), '-depsc', '-vector');
             savefig(figs(1), fullfile(figFoldfov2,[figname1,'.fig']));
             saveas(figs(1),fullfile(figFoldfov2,[figname1,'.png']));
-            print(figs(1),fullfile(figFoldfov2,[figname1,'.eps']), '-depsc', '-painters');
+            print(figs(1),fullfile(figFoldfov2,[figname1,'.eps']), '-depsc', '-vector');
             
             figname2 = '02_FOVs_matched';
             savefig(figs(2), fullfile(figFoldfov1,[figname2,'.fig']));
             saveas(figs(2),fullfile(figFoldfov1,[figname2,'.png']));
-            print(figs(2),fullfile(figFoldfov1,[figname2,'.eps']), '-depsc', '-painters');
+            print(figs(2),fullfile(figFoldfov1,[figname2,'.eps']), '-depsc', '-vector');
             savefig(figs(2), fullfile(figFoldfov2,[figname2,'.fig']));
             saveas(figs(2),fullfile(figFoldfov2,[figname2,'.png']));
-            print(figs(2),fullfile(figFoldfov2,[figname2,'.eps']), '-depsc', '-painters');
+            print(figs(2),fullfile(figFoldfov2,[figname2,'.eps']), '-depsc', '-vector');
             
             figname3 = '03_OnMovRewTmap';
             savefig(figs(3), fullfile(figFoldfov1,[figname3,'.fig']));
             saveas(figs(3),fullfile(figFoldfov1,[figname3,'.png']));
-            print(figs(3),fullfile(figFoldfov1,[figname3,'.eps']), '-depsc', '-painters');
+            print(figs(3),fullfile(figFoldfov1,[figname3,'.eps']), '-depsc', '-vector');
             savefig(figs(3), fullfile(figFoldfov2,[figname3,'.fig']));
             saveas(figs(3),fullfile(figFoldfov2,[figname3,'.png']));
-            print(figs(3),fullfile(figFoldfov2,[figname3,'.eps']), '-depsc', '-painters');
+            print(figs(3),fullfile(figFoldfov2,[figname3,'.eps']), '-depsc', '-vector');
             
             figname4 = '04_OnMovRewTmean';
             savefig(figs(4), fullfile(figFoldfov1,[figname4,'.fig']));
             saveas(figs(4),fullfile(figFoldfov1,[figname4,'.png']));
-            print(figs(4),fullfile(figFoldfov1,[figname4,'.eps']), '-depsc', '-painters');
+            print(figs(4),fullfile(figFoldfov1,[figname4,'.eps']), '-depsc', '-vector');
             savefig(figs(4), fullfile(figFoldfov2,[figname4,'.fig']));
             saveas(figs(4),fullfile(figFoldfov2,[figname4,'.png']));
-            print(figs(4),fullfile(figFoldfov2,[figname4,'.eps']), '-depsc', '-painters');
+            print(figs(4),fullfile(figFoldfov2,[figname4,'.eps']), '-depsc', '-vector');
             
             figname5 = '05_rewRrewTrewCmap';
             savefig(figs(5), fullfile(figFoldfov1,[figname5,'.fig']));
             saveas(figs(5),fullfile(figFoldfov1,[figname5,'.png']));
-            print(figs(5),fullfile(figFoldfov1,[figname5,'.eps']), '-depsc', '-painters');
+            print(figs(5),fullfile(figFoldfov1,[figname5,'.eps']), '-depsc', '-vector');
             savefig(figs(5), fullfile(figFoldfov2,[figname5,'.fig']));
             saveas(figs(5),fullfile(figFoldfov2,[figname5,'.png']));
-            print(figs(5),fullfile(figFoldfov2,[figname5,'.eps']), '-depsc', '-painters');
+            print(figs(5),fullfile(figFoldfov2,[figname5,'.eps']), '-depsc', '-vector');
             
             figname6 = '06_rewRrewTrewCmean';
             savefig(figs(6), fullfile(figFoldfov1,[figname6,'.fig']));
             saveas(figs(6),fullfile(figFoldfov1,[figname6,'.png']));
-            print(figs(6),fullfile(figFoldfov1,[figname6,'.eps']), '-depsc', '-painters');
+            print(figs(6),fullfile(figFoldfov1,[figname6,'.eps']), '-depsc', '-vector');
             savefig(figs(6), fullfile(figFoldfov2,[figname6,'.fig']));
             saveas(figs(6),fullfile(figFoldfov2,[figname6,'.png']));
-            print(figs(6),fullfile(figFoldfov2,[figname6,'.eps']), '-depsc', '-painters');
+            print(figs(6),fullfile(figFoldfov2,[figname6,'.eps']), '-depsc', '-vector');
             
             figname7 = '07_exTraces';
             savefig(figs(7), fullfile(figFoldfov1,[figname7,'.fig']));
             saveas(figs(7),fullfile(figFoldfov1,[figname7,'.png']));
-            print(figs(7),fullfile(figFoldfov1,[figname7,'.eps']), '-depsc', '-painters');
+            print(figs(7),fullfile(figFoldfov1,[figname7,'.eps']), '-depsc', '-vector');
             savefig(figs(7), fullfile(figFoldfov2,[figname7,'.fig']));
             saveas(figs(7),fullfile(figFoldfov2,[figname7,'.png']));
-            print(figs(7),fullfile(figFoldfov2,[figname7,'.eps']), '-depsc', '-painters');
+            print(figs(7),fullfile(figFoldfov2,[figname7,'.eps']), '-depsc', '-vector');
         end
     end
 end

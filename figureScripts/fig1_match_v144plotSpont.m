@@ -95,10 +95,10 @@ for i = 1:numel(lobData)
         figname = sprintf('%s_%s_v144corrs',lobData(i).name,lobData(i).fov);
         savefig(figout(i), fullfile(figFold,[figname,'.fig']));
         saveas(figout(i),fullfile(figFold,[figname,'.png']));
-        print(figout(i),fullfile(figFold,[figname,'.eps']), '-depsc', '-painters');
+        print(figout(i),fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
         savefig(figout(i), fullfile(figFold2,[figname,'.fig']));
         saveas(figout(i),fullfile(figFold2,[figname,'.png']));
-        print(figout(i),fullfile(figFold2,[figname,'.eps']), '-depsc', '-painters');
+        print(figout(i),fullfile(figFold2,[figname,'.eps']), '-depsc', '-vector');
 
     end
     

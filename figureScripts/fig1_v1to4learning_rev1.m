@@ -126,7 +126,7 @@ RmovSesh_stats = multcompare(movSesh_Stats, 'Ctype','bonferroni');
 [movC_P, movC_Table, movC_Stats] = kruskalwallis(RmovC_vector, Rmov_grps);
 RmovC_stats = multcompare(movC_Stats, 'Ctype','bonferroni');
 
-statsAll = v2struct(pPercMov, movSesh_P,movSesh_Table,movSesh_Stats, RmovC_stats, movC_P,movC_Table,movC_Stats, RmovC_stats);
+statsAll = v2struct(pPercMov, movSesh_P,movSesh_Table,movSesh_Stats, RmovSesh_stats, RmovC_stats, movC_P,movC_Table,movC_Stats, RmovC_stats);
 
 RmovSesh_mu(1) = mean(RmovSesh_v1,'omitnan');
 RmovSesh_sem(1) = std(RmovSesh_v1,'omitnan')/sqrt(sum(~isnan(RmovSesh_v1)));
