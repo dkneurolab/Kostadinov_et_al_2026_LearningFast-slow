@@ -62,7 +62,7 @@ xticks([1,2]); yticks([0:0.2:1]); xticklabels({'Real','Neighbour'})
 ylabel('ROI footprint correlation');
 set(gca,'LineWidth',2,'XColor','k','YColor','k','Layer', 'Top','FontSize',20,'TickDir','out');
 [a,b] = signrank(yData1,yData2);
-text(1.5, 0.2, sprintf('p = %0.4f', a))
+text(1.5, 0.2, sprintf('p = %0.8f', a))
 
 % Footprint
 subplot(2,3,2); hold on;
@@ -94,7 +94,7 @@ xticks([1,2]); yticks([0:0.2:1]); xticklabels({'Real','Neighbour'})
 ylabel({'Pixel overlap per', 'matched PC dendrite (%)'});
 set(gca,'LineWidth',2,'XColor','k','YColor','k','Layer', 'Top','FontSize',20,'TickDir','out');
 [a,b] = signrank(yData1,yData2);
-text(1.5, 0.2, sprintf('p = %0.4f', a))
+text(1.5, 0.2, sprintf('p = %0.8f', a))
 
 % Inter-centroid distance
 subplot(2,3,3); hold on;
@@ -126,7 +126,7 @@ xticks([1,2]); yticks([0:0.2:1]*250); xticklabels({'Real','Neighbour'})
 ylabel('Inter-centroid distance (um)');
 set(gca,'LineWidth',2,'XColor','k','YColor','k','Layer', 'Top','FontSize',20,'TickDir','out');
 [a,b] = signrank(yData1,yData2);
-text(2, 50, sprintf('p = %0.4f', a))
+text(2, 50, sprintf('p = %0.8f', a))
 
 
 end

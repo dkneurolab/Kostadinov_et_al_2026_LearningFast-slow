@@ -1,4 +1,4 @@
-function roiStatsAll = fig2_Supp_roiCorrs_rev1(matchData, sessionsv4_n, nEx, paperFold,savebool)
+function roiStatsAll = fig2_Supp_roiCorrs_rev1(matchData, seshv4, nEx, paperFold,savebool)
 % Wrapper function to plot sparse rois for each fov, correlate shapes to
 % each other, compare to nearest neighbour
 
@@ -47,6 +47,33 @@ end
 
 %% Match up v1-v4n-v5 FOVs and plot overlapping ROIs
 
+for iv4 = 1:numel(seshv4)
+    iv14 = [];
+    iv45 = [];
+    for jmatch = 1:numel(matchData)
+        if strcmpi(seshv4(iv4).name, matchData(jmatch).name) && strcmpi(seshv4(iv4).date, matchData(jmatch).date2) && ...
+                strcmpi(seshv4(iv4).fov, matchData(jmatch).fov) && matchData(jmatch).v1 == 1
+            iv14 = jmatch;
+        elseif strcmpi(seshv4(iv4).name, matchData(jmatch).name) && strcmpi(seshv4(iv4).date, matchData(jmatch).date1) && ...
+                strcmpi(seshv4(iv4).fov, matchData(jmatch).fov) && matchData(jmatch).v2 == 5
+            iv45 = jmatch;
+        end        
+    end
+    if ~isempty(iv14) && ~isempty(iv45)
+        [f3, f4] = fig2_Supp_roiCorrs_v145FOV_rev1(matchData(iv14), matchData(iv45),nEx);
+        if savebool
+            figname = sprintf('%s_%s_%sv145_mImgOverlay',matchData(jmatch).name, matchData(jmatch).fov);
+            savefig(f3, fullfile(figFold,[figname,'.fig']));
+            saveas(f3,fullfile(figFold,[figname,'.png']));
+            print(f3,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
+            figname = sprintf('%s_%s_%sv145_roiOverlay',matchData(jmatch).name, matchData(jmatch).fov);
+            savefig(f4, fullfile(figFold,[figname,'.fig']));
+            saveas(f4,fullfile(figFold,[figname,'.png']));
+            print(f4,fullfile(figFold,[figname,'.eps']), '-depsc', '-vector');
+        end
+
+    end
+end
 
 %% Calculate summary stats
 
